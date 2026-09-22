@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 import { signUp } from '@/actions/auth';
 import { CaptchaField } from '@/components/auth/captcha-field';
-import { FormField } from '@/components/auth/form-field';
-import { FormMessage } from '@/components/auth/form-message';
-import { SubmitButton } from '@/components/auth/submit-button';
-import { INITIAL_AUTH_STATE } from '@/lib/auth/form';
+import { FormField } from '@/components/form/form-field';
+import { FormMessage } from '@/components/form/form-message';
+import { SubmitButton } from '@/components/form/submit-button';
+import { INITIAL_FORM_STATE } from '@/lib/forms';
 import { PASSWORD_MIN_LENGTH } from '@/lib/auth/schemas';
 
 interface SignupFormProps {
@@ -16,7 +16,7 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ next, turnstileSiteKey }: SignupFormProps) {
-  const [state, action] = useActionState(signUp, INITIAL_AUTH_STATE);
+  const [state, action] = useActionState(signUp, INITIAL_FORM_STATE);
 
   return (
     // key: remount after each submit so echoed defaultValues apply and the CAPTCHA resets.

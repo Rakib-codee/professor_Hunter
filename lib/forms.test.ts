@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { z } from 'zod';
-import { CAPTCHA_FIELD_NAME, captchaTokenFrom, echoValues, fieldErrorsFrom } from './form';
+import { CAPTCHA_FIELD_NAME, captchaTokenFrom, echoValues, fieldErrorsFrom } from './forms';
 
 describe('fieldErrorsFrom', () => {
   test('keeps only the first message per field', () => {

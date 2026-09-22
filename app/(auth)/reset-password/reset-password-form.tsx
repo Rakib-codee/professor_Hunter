@@ -2,14 +2,14 @@
 
 import { useActionState } from 'react';
 import { updatePassword } from '@/actions/auth';
-import { FormField } from '@/components/auth/form-field';
-import { FormMessage } from '@/components/auth/form-message';
-import { SubmitButton } from '@/components/auth/submit-button';
-import { INITIAL_AUTH_STATE } from '@/lib/auth/form';
+import { FormField } from '@/components/form/form-field';
+import { FormMessage } from '@/components/form/form-message';
+import { SubmitButton } from '@/components/form/submit-button';
+import { INITIAL_FORM_STATE } from '@/lib/forms';
 import { PASSWORD_MIN_LENGTH } from '@/lib/auth/schemas';
 
 export function ResetPasswordForm() {
-  const [state, action] = useActionState(updatePassword, INITIAL_AUTH_STATE);
+  const [state, action] = useActionState(updatePassword, INITIAL_FORM_STATE);
 
   return (
     <form action={action} className="flex flex-col gap-4" noValidate>

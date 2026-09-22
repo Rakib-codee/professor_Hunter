@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 import type { z } from 'zod';
 import { friendlyAuthError } from '@/lib/auth/errors';
-import { captchaTokenFrom, echoValues, fieldErrorsFrom, type AuthFormState } from '@/lib/auth/form';
+import { captchaTokenFrom, echoValues, fieldErrorsFrom, type FormState } from '@/lib/forms';
 import { safeNextPath } from '@/lib/auth/redirect';
 import {
   forgotPasswordSchema,
@@ -25,11 +25,11 @@ const RESET_EMAIL_SENT =
 const CONFIRMATION_PENDING =
   'Account created. Check your email to confirm your address, then log in.';
 
-function nextAttempt(prev: AuthFormState): number {
+function nextAttempt(prev: FormState): number {
   return prev.attempt + 1;
 }
 
-function fail(prev: AuthFormState, error: string, values?: Record<string, string>): AuthFormState {
+function fail(prev: FormState, error: string, values?: Record<string, string>): FormState {
   return { ok: false, error, values, attempt: nextAttempt(prev) };
 }
 
@@ -38,11 +38,7 @@ function logAuthError(action: string, error: { code?: string | null; status?: nu
   console.error(`[auth.${action}] code=${error.code ?? 'none'} status=${error.status ?? 'none'}`);
 }
 
-function invalid(
-  prev: AuthFormState,
-  error: z.ZodError,
-  values?: Record<string, string>,
-): AuthFormState {
+function invalid(prev: FormState, error: z.ZodError, values?: Record<string, string>): FormState {
   return { ok: false, fieldErrors: fieldErrorsFrom(error), values, attempt: nextAttempt(prev) };
 }
 
@@ -54,7 +50,7 @@ function readCaptcha(formData: FormData): { token?: string; missing: boolean } {
   return { token, missing: required && !token };
 }
 
-export async function signUp(prev: AuthFormState, formData: FormData): Promise<AuthFormState> {
+export async function signUp(prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = signUpSchema.safeParse({
     fullName: formData.get('fullName'),
     email: formData.get('email'),
@@ -85,7 +81,7 @@ export async function signUp(prev: AuthFormState, formData: FormData): Promise<A
   redirect(safeNextPath(formData.get('next')?.toString(), DEFAULT_AFTER_LOGIN));
 }
 
-export async function signIn(prev: AuthFormState, formData: FormData): Promise<AuthFormState> {
+export async function signIn(prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = signInSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
@@ -110,9 +106,9 @@ export async function signIn(prev: AuthFormState, formData: FormData): Promise<A
 }
 
 export async function requestPasswordReset(
-  prev: AuthFormState,
+  prev: FormState,
   formData: FormData,
-): Promise<AuthFormState> {
+): Promise<FormState> {
   const parsed = forgotPasswordSchema.safeParse({ email: formData.get('email') });
   const values = echoValues(formData, ['email']);
   if (!parsed.success) return invalid(prev, parsed.error, values);
@@ -138,10 +134,7 @@ export async function requestPasswordReset(
   return { ok: true, message: RESET_EMAIL_SENT, attempt: nextAttempt(prev) };
 }
 
-export async function updatePassword(
-  prev: AuthFormState,
-  formData: FormData,
-): Promise<AuthFormState> {
+export async function updatePassword(prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = resetPasswordSchema.safeParse({
     password: formData.get('password'),
     confirm: formData.get('confirm'),

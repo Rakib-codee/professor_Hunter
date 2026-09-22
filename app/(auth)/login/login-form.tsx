@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 import { signIn } from '@/actions/auth';
 import { CaptchaField } from '@/components/auth/captcha-field';
-import { FormField } from '@/components/auth/form-field';
-import { FormMessage } from '@/components/auth/form-message';
-import { SubmitButton } from '@/components/auth/submit-button';
-import { INITIAL_AUTH_STATE } from '@/lib/auth/form';
+import { FormField } from '@/components/form/form-field';
+import { FormMessage } from '@/components/form/form-message';
+import { SubmitButton } from '@/components/form/submit-button';
+import { INITIAL_FORM_STATE } from '@/lib/forms';
 
 interface LoginFormProps {
   next: string;
@@ -16,7 +16,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ next, initialError, turnstileSiteKey }: LoginFormProps) {
-  const [state, action] = useActionState(signIn, INITIAL_AUTH_STATE);
+  const [state, action] = useActionState(signIn, INITIAL_FORM_STATE);
   const error = state.error ?? (state.attempt === 0 ? initialError : undefined);
 
   return (

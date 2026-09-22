@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Shared shape for the auth server actions + useActionState forms.
 
-export interface AuthFormState {
+export interface FormState {
   ok: boolean;
   /** Form-level error, already student-friendly. */
   error?: string;
@@ -16,7 +16,7 @@ export interface AuthFormState {
   values?: Record<string, string>;
 }
 
-export const INITIAL_AUTH_STATE: AuthFormState = { ok: false, attempt: 0 };
+export const INITIAL_FORM_STATE: FormState = { ok: false, attempt: 0 };
 
 export const CAPTCHA_FIELD_NAME = 'cf-turnstile-response';
 
