@@ -22,12 +22,6 @@ begin
   return new;
 end $$;
 
--- security definer so RLS policies on `students` can call it without recursion
-create or replace function is_admin() returns boolean
-language sql stable security definer set search_path = public as $$
-  select exists (select 1 from students where id = auth.uid() and role = 'admin');
-$$;
-
 -- ============ universities ============
 create table universities (
   id          uuid primary key default gen_random_uuid(),
@@ -110,6 +104,14 @@ create table students (
 );
 create trigger students_updated_at before update on students
   for each row execute function set_updated_at();
+
+-- security definer so RLS policies on `students` can call it without recursion.
+-- Declared here (not in helpers) because `language sql` bodies are validated at creation
+-- time, so `students` must already exist.
+create or replace function is_admin() returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from students where id = auth.uid() and role = 'admin');
+$$;
 
 -- profile row is created automatically on signup
 create or replace function handle_new_user() returns trigger
