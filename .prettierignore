@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+coverage
+public
+package-lock.json
+*.csv
+research_tags.json
+professor_hunter_master_prompt_v2.md
+PLAN.md
+AGENTS.md
+supabase/migrations
