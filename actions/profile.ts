@@ -39,7 +39,8 @@ async function saveStudent(patch: TablesUpdate<'students'>): Promise<string | nu
   const supabase = await createClient();
   const { error } = await supabase.from('students').update(patch).eq('id', userId);
   if (error) {
-    console.error(`[profile.save] code=${error.code}`);
+    // PostgREST/transport detail only; the row payload is never logged.
+    console.error(`[profile.save] code=${error.code ?? 'none'} message=${error.message}`);
     return SAVE_FAILED;
   }
   return null;
