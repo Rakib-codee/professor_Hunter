@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { SignOutButton } from '@/components/auth/sign-out-button';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { getCurrentUserId } from '@/lib/data/students';
 
 // Public browsing shell (/find, /professor/[id]). Header adapts to the session.
@@ -13,20 +13,20 @@ export default async function PublicLayout({ children }: LayoutProps<'/'>) {
           Professor Hunter
         </Link>
         <nav className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" render={<Link href="/find" />}>
+          <Link href="/find" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
             Find
-          </Button>
+          </Link>
           {userId ? (
             <>
-              <Button variant="ghost" size="sm" render={<Link href="/saved" />}>
+              <Link href="/saved" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
                 Saved
-              </Button>
+              </Link>
               <SignOutButton />
             </>
           ) : (
-            <Button size="sm" render={<Link href="/login" />}>
+            <Link href="/login" className={buttonVariants({ size: 'sm' })}>
               Log in
-            </Button>
+            </Link>
           )}
         </nav>
       </header>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { COMPLETENESS_THRESHOLD } from '@/lib/constants';
 
 interface DraftGateProps {
@@ -19,14 +19,12 @@ export function DraftGate({
 }: DraftGateProps) {
   if (!isSignedIn) {
     return (
-      <Button
-        variant="outline"
-        render={
-          <Link href={`/login?next=${encodeURIComponent(`/professor/${professorId}/draft`)}`} />
-        }
+      <Link
+        href={`/login?next=${encodeURIComponent(`/professor/${professorId}/draft`)}`}
+        className={buttonVariants({ variant: 'outline' })}
       >
         Log in to draft an email
-      </Button>
+      </Link>
     );
   }
   if (!isDraftEnabled) {
@@ -54,5 +52,9 @@ export function DraftGate({
       </div>
     );
   }
-  return <Button render={<Link href={`/professor/${professorId}/draft`} />}>Draft email</Button>;
+  return (
+    <Link href={`/professor/${professorId}/draft`} className={buttonVariants({})}>
+      Draft email
+    </Link>
+  );
 }

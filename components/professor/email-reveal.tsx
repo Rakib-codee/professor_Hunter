@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { revealEmail, type RevealResult } from '@/actions/professors';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { emailTypeLabel } from '@/lib/utils/display';
 
 interface EmailRevealProps {
@@ -27,11 +27,12 @@ export function EmailReveal({ professorId, hasEmail, isSignedIn }: EmailRevealPr
   }
   if (!isSignedIn) {
     return (
-      <Button
-        render={<Link href={`/login?next=${encodeURIComponent(`/professor/${professorId}`)}`} />}
+      <Link
+        href={`/login?next=${encodeURIComponent(`/professor/${professorId}`)}`}
+        className={buttonVariants({})}
       >
         Log in to reveal email
-      </Button>
+      </Link>
     );
   }
   if (result?.email) {

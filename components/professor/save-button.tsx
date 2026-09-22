@@ -4,7 +4,7 @@ import { HeartIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic, useTransition } from 'react';
 import { toggleSaved } from '@/actions/professors';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from 'cn';
 
 interface SaveButtonProps {
@@ -21,15 +21,14 @@ export function SaveButton({ professorId, saved, isSignedIn, size = 'icon-sm' }:
 
   if (!isSignedIn) {
     return (
-      <Button
-        variant="ghost"
-        size={size}
+      <Link
+        href={`/login?next=${encodeURIComponent(`/professor/${professorId}`)}`}
+        className={buttonVariants({ variant: 'ghost', size })}
         aria-label="Log in to save"
-        render={<Link href={`/login?next=${encodeURIComponent(`/professor/${professorId}`)}`} />}
       >
         <HeartIcon />
         {size === 'default' ? 'Save' : null}
-      </Button>
+      </Link>
     );
   }
 

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import type { Facets } from '@/lib/data/professors';
 import type { FindParams } from '@/lib/find/params';
@@ -82,9 +82,13 @@ export function FilterForm({ basePath, params, facets }: FilterFormProps) {
         <Button type="submit" size="sm">
           Apply
         </Button>
-        <Button type="button" variant="ghost" size="sm" render={<a href={basePath} />}>
+        <a
+          href={basePath}
+          className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+          type="button"
+        >
           Clear
-        </Button>
+        </a>
       </div>
     </form>
   );
