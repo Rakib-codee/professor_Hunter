@@ -10,7 +10,7 @@ import { FIELDS, type Field } from '@/lib/constants';
 import type { Student } from '@/lib/data/students';
 import { INITIAL_FORM_STATE } from '@/lib/forms';
 import { TAGS_MAX } from '@/lib/profile/schemas';
-import { tagsForField } from '@/lib/profile/tags';
+import { inferFieldFromMajor, tagsForField } from '@/lib/profile/tags';
 
 interface ResearchFormProps {
   student: Student;
@@ -25,8 +25,11 @@ function asField(value: string | null | undefined): Field | null {
 
 export function ResearchForm({ student, flow }: ResearchFormProps) {
   const [state, action] = useActionState(saveResearchStep, INITIAL_FORM_STATE);
+  // Preselect from the saved target field, else guess from the major typed in step 1.
   const [field, setField] = useState<Field | null>(
-    asField(state.values?.target_field) ?? asField(student.target_field),
+    asField(state.values?.target_field) ??
+      asField(student.target_field) ??
+      inferFieldFromMajor(student.major),
   );
   const tags = field ? tagsForField(field) : [];
 

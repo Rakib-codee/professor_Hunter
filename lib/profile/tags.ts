@@ -19,3 +19,19 @@ export function tagsForField(field: Field): readonly string[] {
 export function isKnownTag(field: Field, tag: string): boolean {
   return tagsForField(field).includes(tag);
 }
+
+// Ordered: "software" must win over "computer" for "Computer Science / Software Engineering".
+const MAJOR_PATTERNS: readonly { pattern: RegExp; field: Field }[] = [
+  { pattern: /software/i, field: 'Software Engineering' },
+  {
+    pattern: /computer|\bcs\b|\bcse\b|\bit\b|informati/i,
+    field: 'Computer Science and Technology',
+  },
+  { pattern: /civil|structural|geotech/i, field: 'Civil Engineering' },
+];
+
+/** Best-guess target field from a free-text major, used to preselect onboarding step 3. */
+export function inferFieldFromMajor(major: string | null | undefined): Field | null {
+  if (!major) return null;
+  return MAJOR_PATTERNS.find(({ pattern }) => pattern.test(major))?.field ?? null;
+}

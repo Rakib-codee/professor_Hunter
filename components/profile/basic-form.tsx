@@ -6,7 +6,7 @@ import { FormField } from '@/components/form/form-field';
 import { FormMessage } from '@/components/form/form-message';
 import { NativeSelect } from '@/components/form/native-select';
 import { SubmitButton } from '@/components/form/submit-button';
-import { CGPA_SCALES, GRADUATION_YEAR_MAX, GRADUATION_YEAR_MIN } from '@/lib/constants';
+import { CGPA_SCALES, FIELDS, GRADUATION_YEAR_MAX, GRADUATION_YEAR_MIN } from '@/lib/constants';
 import type { Student } from '@/lib/data/students';
 import { INITIAL_FORM_STATE } from '@/lib/forms';
 
@@ -57,9 +57,15 @@ export function BasicForm({ student, flow }: BasicFormProps) {
         name="major"
         label="Major"
         placeholder="e.g. Civil Engineering"
+        list="major-suggestions"
         defaultValue={value('major')}
         error={state.fieldErrors?.major}
       />
+      <datalist id="major-suggestions">
+        {FIELDS.map((field) => (
+          <option key={field} value={field} />
+        ))}
+      </datalist>
       <div className="grid grid-cols-2 gap-3">
         <FormField
           name="cgpa"
