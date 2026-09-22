@@ -1,0 +1,79 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { FilterForm } from '@/components/find/filter-form';
+import { FilterSheet } from '@/components/find/filter-sheet';
+import { Pagination } from '@/components/find/pagination';
+import { SearchBox } from '@/components/find/search-box';
+import { TagFilter } from '@/components/find/tag-filter';
+import { ProfessorCard } from '@/components/professor/professor-card';
+import { fieldFromSlug } from '@/lib/constants';
+import { getFacets, getSavedIds, searchProfessors } from '@/lib/data/professors';
+import { getCurrentUserId } from '@/lib/data/students';
+import { parseFindParams } from '@/lib/find/params';
+
+export async function generateMetadata({ params }: PageProps<'/find/[major]'>): Promise<Metadata> {
+  const field = fieldFromSlug((await params).major);
+  return { title: field ? `${field} professors` : 'Find professors' };
+}
+
+export default async function FindMajorPage({ params, searchParams }: PageProps<'/find/[major]'>) {
+  const { major } = await params;
+  const field = fieldFromSlug(major);
+  if (!field) notFound();
+
+  const basePath = `/find/${major}`;
+  const find = parseFindParams(await searchParams);
+  const userId = await getCurrentUserId();
+  const [facets, result, savedIds] = await Promise.all([
+    getFacets(field),
+    searchProfessors(field, find),
+    userId ? getSavedIds(userId) : Promise.resolve(new Set<string>()),
+  ]);
+  const activeFilters = [
+    find.uni,
+    find.province,
+    find.uniEmail ? 'x' : null,
+    ...find.accepts,
+  ].filter(Boolean).length;
+
+  const filters = <FilterForm basePath={basePath} params={find} facets={facets} />;
+
+  return (
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">{field}</h1>
+        <p className="text-muted-foreground text-sm">
+          {facets.total} professors across {facets.universities.length} universities
+        </p>
+      </div>
+      <TagFilter basePath={basePath} params={find} tags={facets.tags} untagged={facets.untagged} />
+      <div className="flex items-center gap-2">
+        <div className="flex-1">
+          <SearchBox basePath={basePath} params={find} />
+        </div>
+        <div className="md:hidden">
+          <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
+        </div>
+      </div>
+      <div className="grid gap-6 md:grid-cols-[220px_1fr]">
+        <aside className="hidden md:block">{filters}</aside>
+        <section className="flex flex-col gap-3" aria-label="Results">
+          <p className="text-muted-foreground text-sm">
+            {result.total === 0
+              ? 'No professors match. Try fewer filters.'
+              : `${result.total} results`}
+          </p>
+          {result.items.map((professor) => (
+            <ProfessorCard
+              key={professor.id}
+              professor={professor}
+              saved={savedIds.has(professor.id)}
+              isSignedIn={Boolean(userId)}
+            />
+          ))}
+          <Pagination basePath={basePath} params={find} total={result.total} />
+        </section>
+      </div>
+    </div>
+  );
+}
