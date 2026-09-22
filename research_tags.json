@@ -1,0 +1,26 @@
+{
+  "Civil Engineering": [
+    "Structural Engineering",
+    "Geotechnical Engineering",
+    "Bridge Engineering",
+    "Wind & Earthquake Engineering",
+    "Transportation & Road/Railway",
+    "Hydraulic & Municipal Engineering",
+    "Civil Engineering Materials",
+    "Construction Management & Smart Construction",
+    "Computational Mechanics & Numerical Modelling"
+  ],
+  "Computer Science and Technology": [
+    "Artificial Intelligence",
+    "Machine Learning & Deep Learning",
+    "Computer Vision & Image Processing",
+    "Natural Language Processing",
+    "Data Mining & Big Data",
+    "Cloud, Edge & Distributed Computing",
+    "Cybersecurity & Privacy",
+    "Networks & IoT",
+    "Software Engineering & Systems",
+    "Robotics, HCI & Embodied AI",
+    "Bioinformatics & AI in Medicine"
+  ]
+}
