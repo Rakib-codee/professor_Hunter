@@ -55,3 +55,9 @@ next-env.d.ts
 
 # compare-drafts output
 out/
+
+# source dataset — contains real professor emails and internal notes; never committed (kept local + in Supabase)
+/professor_hunter_dataset_v4.csv
+
+# local MCP client config
+/.mcp.json
