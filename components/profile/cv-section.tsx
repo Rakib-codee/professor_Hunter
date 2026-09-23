@@ -40,7 +40,7 @@ export function CvSection({ downloadUrl }: CvSectionProps) {
         </p>
       )}
       <form
-        key={state.attempt}
+        key={`${state.attempt}-${downloadUrl ? 'has-cv' : 'no-cv'}`}
         action={action}
         className="flex flex-col gap-2"
         encType="multipart/form-data"
