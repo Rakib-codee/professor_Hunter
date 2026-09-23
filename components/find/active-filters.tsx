@@ -61,7 +61,7 @@ export function ActiveFilters({
   ];
   if (items.length === 0) return null;
   return (
-    <ul className="flex flex-wrap gap-2" aria-label="Filters in effect">
+    <ul className="enter flex flex-wrap gap-2" aria-label="Filters in effect">
       {items.map((item) => (
         <li key={item.key}>
           <Link

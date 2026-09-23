@@ -171,9 +171,15 @@ Also removed while reviewing: middle-dot joins in every meta string (they hide w
 
 Dark mode (tokens exist but nothing enables them; this pass stays light-only), new copy, new routes, new data fields, and any change to what the badges mean.
 
-## 7. Typography, revised (proposal, not yet implemented)
+## 7. Typography, revised (direction B chosen 2026-09-24, implemented)
 
 Pass 2 shipped one family (Source Sans 3) and let layout carry hierarchy. That keeps the page calm but gives it no voice, and with no images and a deliberately flat palette, type is the only element left that can. This section replaces §2's single-family plan with two families in clearly different roles. The three constraints hold: Latin sits beside system CJK on every record (so no serif), the webfont budget stays at 40–60 KB Latin-only, and body text stays highly legible on cheap Android screens for non-native readers.
+
+### 7.0 Decision
+
+Three directions were rendered like for like (warm humanist Alegreya Sans + Source Sans 3; precise technical IBM Plex Sans; width-contrast Sofia Sans). **Direction B, IBM Plex Sans, was chosen**: one engineered family at 400 (text), 600 (controls, emphasis) and 700 (display), Latin subset, about 53 KB, with CJK siblings by design so its x-height and stroke weight sit level with PingFang and Noto Sans CJK. Everything below that names Archivo is superseded: the display face is Plex 700 and figures are Plex 700 with tabular numerals; the scale, the CJK rule (0.9× regular inside display type), and §7.3–7.5 apply unchanged.
+
+**Hierarchy (first viewport):** the major picker is the single dominant element (names 32 px on phones, 44 px on desktop, counts in the same face on the same baseline, rows 84/104 px). The headline steps down to 26/30 px on two lines. The counts live inside the subhead sentence as bold tabular figures; the separate figure block is gone. On phones the order is headline, sentence, picker, trust line, buttons.
 
 ### 7.1 The faces, and why not the obvious ones
 
@@ -231,3 +237,12 @@ Three places carry the design; everywhere else the display face is absent.
 ### 7.5 Where restraint applies
 
 Body copy, forms, alerts, the draft editor, the tracker rows below the name, legal pages, the footer, admin tables and every button stay in Source Sans 3 exactly as shipped. Archivo never appears in a control, never below 20 px, never in a running sentence, and never in more than two sizes on one screen. Emphasis inside body text is Source Sans 600, not the display face. If a screen has no title and no name, it has no Archivo at all: login, signup, password reset and the legal pages keep their quiet 22 px Source Sans headings.
+
+## 9. Motion
+
+Users are on cheap Android phones over slow connections, so motion is spent only where something changes state, and never on scroll.
+
+- **Rules.** 150–250 ms, ease-out (`cubic-bezier(0.2, 0, 0, 1)`), transform and opacity only, never width, height, top or left. Space is reserved first so nothing shifts. `prefers-reduced-motion: reduce` collapses every animation and transition to an instant change (base rule in `globals.css`).
+- **Where.** Filters in effect appear with a 6 px rise; the results ledger rises row by row (first eight rows, 30 ms apart) after a filter change; the revealed email address rises into place; `Reveal email` and `Generate draft` pulse softly while pending; the draft editor and the marked-as-sent panel rise once when they appear; each route change fades the new page in over 180 ms (`app/template.tsx`).
+- **Landing entrance.** One orchestrated sequence on load: intro, then the three picker rows 30 ms apart, then the trust line and buttons at 260 ms. About 400 ms in total, once.
+- **Never.** Scroll-triggered effects, parallax, background animation, per-section fades, hover motion beyond colour.

@@ -18,6 +18,7 @@ import {
   type DraftSuccess,
 } from '@/lib/draft/api-schema';
 import type { Tone } from '@/lib/llm/types';
+import { cn } from 'cn';
 
 interface DraftEditorProps {
   professorId: string;
@@ -115,7 +116,7 @@ export function DraftEditor({
 
   if (phase === 'sent') {
     return (
-      <div className="border-border flex flex-col gap-3 rounded-sm border p-4" role="status">
+      <div className="enter border-border flex flex-col gap-3 rounded-sm border p-4" role="status">
         <p className="font-medium">
           Marked as sent. Follow-up reminder set for 10 days from today.
         </p>
@@ -181,7 +182,9 @@ export function DraftEditor({
             onClick={() => void generate(tone)}
             disabled={phase === 'generating' || quotaLeft <= 0}
           >
-            {phase === 'generating' ? 'Writing…' : 'Generate draft'}
+            <span className={cn(phase === 'generating' && 'busy-pulse')}>
+              {phase === 'generating' ? 'Writing…' : 'Generate draft'}
+            </span>
           </Button>
         ) : confirmRegenerate ? (
           <div className="flex flex-wrap items-center gap-2">
@@ -222,7 +225,7 @@ export function DraftEditor({
       </section>
 
       {phase === 'editing' ? (
-        <section className="flex flex-col gap-4">
+        <section className="enter flex flex-col gap-4">
           {warnings.length > 0 ? (
             <div
               role="alert"

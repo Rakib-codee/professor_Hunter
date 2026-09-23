@@ -92,7 +92,7 @@ export default async function FindMajorPage({ params, searchParams }: PageProps<
               ? 'No professors match. Try fewer filters.'
               : `${result.total} results`}
           </p>
-          <div className="ledger border-border border-t">
+          <div key={JSON.stringify(find)} className="ledger ledger-enter border-border border-t">
             {result.items.map((professor) => (
               <ProfessorCard
                 key={professor.id}
