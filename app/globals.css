@@ -256,8 +256,8 @@
 }
 @utility busy-pulse {
   animation: pulse-soft 1.2s ease-in-out infinite;
-    --logo-ink: #ffffff;
-    --logo-accent: var(--gold);
+  --logo-ink: #ffffff;
+  --logo-accent: var(--gold);
 }
 
 @utility font-cjk {
