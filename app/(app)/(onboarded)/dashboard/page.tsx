@@ -31,7 +31,7 @@ export default async function DashboardPage() {
       {resume ? (
         <Link
           href={`/professor/${resume.id}`}
-          className="bg-muted hover:bg-accent flex items-center justify-between gap-3 rounded-sm px-4 py-3 transition-colors"
+          className="card-soft hover:bg-muted flex items-center justify-between gap-3 px-5 py-4 transition-colors"
         >
           <span className="flex flex-col gap-0.5">
             <span className="text-muted-foreground text-[13px]">Resume where you left off</span>
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
         </section>
       ) : null}
 
-      <ul className="ledger border-border border-y">
+      <ul className="grid gap-4 sm:grid-cols-3">
         {[
           {
             href: '/find',
@@ -95,9 +95,9 @@ export default async function DashboardPage() {
           <li key={entry.href}>
             <Link
               href={entry.href}
-              className="hover:bg-muted flex min-h-16 items-center justify-between gap-4 px-1 py-3 transition-colors"
+              className="card-soft hover:bg-muted flex h-full items-center justify-between gap-4 p-5 transition-colors"
             >
-              <span className="flex flex-col gap-0.5">
+              <span className="flex flex-col gap-1">
                 <span className="text-lg leading-tight font-semibold">{entry.title}</span>
                 <span className="text-muted-foreground tnum text-[15px]">{entry.meta}</span>
               </span>

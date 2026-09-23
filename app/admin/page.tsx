@@ -14,26 +14,26 @@ export default async function AdminPage() {
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <h1 className="heading-page">Stats</h1>
       <div className="grid gap-3 sm:grid-cols-4">
-        <Card size="sm">
+        <Card size="sm" className="card-soft">
           <CardHeader>
             <CardDescription>Users</CardDescription>
             <CardTitle className="display-figure text-[28px]">{stats.users}</CardTitle>
           </CardHeader>
         </Card>
-        <Card size="sm">
+        <Card size="sm" className="card-soft">
           <CardHeader>
             <CardDescription>Drafts</CardDescription>
             <CardTitle className="display-figure text-[28px]">{stats.drafts}</CardTitle>
           </CardHeader>
         </Card>
-        <Card size="sm">
+        <Card size="sm" className="card-soft">
           <CardHeader>
             <CardDescription>Emails tracked</CardDescription>
             <CardTitle className="display-figure text-[28px]">{outreachTotal}</CardTitle>
           </CardHeader>
         </Card>
         <Link href="/admin/reports" className="block">
-          <Card size="sm" className="hover:bg-muted/50 h-full transition-colors">
+          <Card size="sm" className="card-soft hover:bg-muted h-full transition-colors">
             <CardHeader>
               <CardDescription>Open reports</CardDescription>
               <CardTitle className="display-figure text-[28px]">{stats.openReports}</CardTitle>
