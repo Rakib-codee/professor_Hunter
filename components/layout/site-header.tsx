@@ -16,7 +16,8 @@ export function SiteHeader({
 }) {
   return (
     <header className="border-border bg-background relative border-b">
-      <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
+      {/* Full-bleed: wordmark at the left edge, session controls at the right edge. */}
+      <div className="flex h-14 w-full items-center justify-between px-4 md:px-6">
         <Link href={homeHref} className="text-[17px] font-semibold tracking-tight">
           {brand}
         </Link>

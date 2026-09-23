@@ -31,16 +31,8 @@ export function MajorPicker({ counts, preferredField }: MajorPickerProps) {
                   <span className="text-primary text-[13px] font-medium">your field</span>
                 ) : null}
               </span>
-              <span className="text-muted-foreground tnum flex shrink-0 items-center gap-2 text-right text-[13px] leading-tight">
-                {count ? (
-                  <span>
-                    {count.professors} professors
-                    <br />
-                    {count.universities} universities
-                  </span>
-                ) : (
-                  <span>No professors yet</span>
-                )}
+              <span className="text-muted-foreground tnum flex shrink-0 items-center gap-2 text-right text-[15px] leading-tight">
+                <span>{count ? `${count.professors} professors` : 'No professors yet'}</span>
                 <ChevronRightIcon className="size-4" aria-hidden="true" />
               </span>
             </Link>
