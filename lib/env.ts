@@ -11,6 +11,9 @@ const publicSchema = z.object({
   // Optional. When set, the Cloudflare Turnstile widget renders on the auth forms and the
   // token is passed to Supabase Auth (which must have CAPTCHA protection enabled).
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1).optional(),
+  // Optional cookie-free analytics (Umami). Both must be set for the script to load.
+  NEXT_PUBLIC_UMAMI_SCRIPT_URL: z.url().optional(),
+  NEXT_PUBLIC_UMAMI_WEBSITE_ID: z.string().min(1).optional(),
 });
 
 export const LLM_PROVIDERS = ['none', 'mock', 'deepseek', 'groq'] as const;
@@ -50,6 +53,8 @@ function readPublicSource(): Record<string, string | undefined> {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+    NEXT_PUBLIC_UMAMI_SCRIPT_URL: process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL,
+    NEXT_PUBLIC_UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
   };
 }
 

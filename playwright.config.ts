@@ -24,7 +24,7 @@ export default defineConfig({
   },
   projects: [{ name: 'mobile-chromium', use: { ...devices['Pixel 5'] } }],
   webServer: {
-    command: 'npm run dev',
+    command: process.env.PLAYWRIGHT_WEB_SERVER ?? 'npm run dev',
     url: BASE_URL,
     reuseExistingServer: true,
     timeout: 120_000,
