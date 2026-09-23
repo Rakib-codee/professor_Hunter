@@ -25,7 +25,7 @@ describe('professorEditSchema', () => {
     expect(result.data).toMatchObject({
       name_cn: null,
       school: null,
-      email: 'li.wei@tongji.edu.cn',
+      email: 'Li.Wei@tongji.edu.cn',
       email_type: 'university',
       last_verified: '2026-09',
       last_verified_on: '2026-09-01',
