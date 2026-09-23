@@ -14,7 +14,7 @@ export default async function SavedPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-      <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Saved professors</h1>
+      <h1 className="heading-page">Saved professors</h1>
       {professors.length === 0 ? (
         <p className="text-muted-foreground text-[15px]">
           Nothing saved yet. Tap the heart on any professor in{' '}

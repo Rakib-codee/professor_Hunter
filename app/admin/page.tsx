@@ -12,38 +12,38 @@ export default async function AdminPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Stats</h1>
+      <h1 className="heading-page">Stats</h1>
       <div className="grid gap-3 sm:grid-cols-4">
         <Card size="sm">
           <CardHeader>
             <CardDescription>Users</CardDescription>
-            <CardTitle>{stats.users}</CardTitle>
+            <CardTitle className="display-figure text-[28px]">{stats.users}</CardTitle>
           </CardHeader>
         </Card>
         <Card size="sm">
           <CardHeader>
             <CardDescription>Drafts</CardDescription>
-            <CardTitle>{stats.drafts}</CardTitle>
+            <CardTitle className="display-figure text-[28px]">{stats.drafts}</CardTitle>
           </CardHeader>
         </Card>
         <Card size="sm">
           <CardHeader>
             <CardDescription>Emails tracked</CardDescription>
-            <CardTitle>{outreachTotal}</CardTitle>
+            <CardTitle className="display-figure text-[28px]">{outreachTotal}</CardTitle>
           </CardHeader>
         </Card>
         <Link href="/admin/reports" className="block">
           <Card size="sm" className="hover:bg-muted/50 h-full transition-colors">
             <CardHeader>
               <CardDescription>Open reports</CardDescription>
-              <CardTitle>{stats.openReports}</CardTitle>
+              <CardTitle className="display-figure text-[28px]">{stats.openReports}</CardTitle>
             </CardHeader>
           </Card>
         </Link>
       </div>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-[20px] leading-tight font-semibold">Outreach by status</h2>
+        <h2 className="heading-section">Outreach by status</h2>
         {outreachTotal === 0 ? (
           <p className="text-muted-foreground text-[15px]">No emails tracked yet.</p>
         ) : (
@@ -59,7 +59,7 @@ export default async function AdminPage() {
       </section>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-[20px] leading-tight font-semibold">Reply rate by university</h2>
+        <h2 className="heading-section">Reply rate by university</h2>
         <p className="text-muted-foreground text-[13px]">
           Shown once a university has 5 or more tracked emails.
         </p>

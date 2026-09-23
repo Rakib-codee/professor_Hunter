@@ -9,7 +9,7 @@ export default async function AdminReportsPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
       <div>
-        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Open reports</h1>
+        <h1 className="heading-page">Open reports</h1>
         <p className="text-muted-foreground text-[15px]">
           {reports.length} open. Set the professor status here; edit other fields in Supabase
           Studio.

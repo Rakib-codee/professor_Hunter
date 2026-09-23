@@ -69,7 +69,7 @@ export default async function FindMajorPage({ params, searchParams }: PageProps<
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div>
-        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">{field}</h1>
+        <h1 className="heading-page">{field}</h1>
         <p className="text-muted-foreground tnum mt-1 text-base">
           {facets.total} professors across {facets.universities.length} universities
         </p>

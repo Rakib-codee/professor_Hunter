@@ -24,9 +24,7 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
-          {firstName ? `Hi ${firstName}` : 'Dashboard'}
-        </h1>
+        <h1 className="heading-page">{firstName ? `Hi ${firstName}` : 'Dashboard'}</h1>
         <CompletenessBar result={completeness} />
       </div>
 

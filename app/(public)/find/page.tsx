@@ -15,7 +15,7 @@ export default async function FindPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
       <div>
-        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Pick your major</h1>
+        <h1 className="heading-page">Pick your major</h1>
         <p className="text-muted-foreground mt-1 text-base">
           Browse without an account. Emails need a login.
         </p>

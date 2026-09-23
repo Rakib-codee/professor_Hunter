@@ -9,9 +9,7 @@ export default function AdminImportPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <div>
-        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
-          Import professors
-        </h1>
+        <h1 className="heading-page">Import professors</h1>
         <p className="text-muted-foreground text-[15px]">
           Idempotent: re-importing the same file changes nothing. Rows match on university + email,
           or university + name + field when the email is missing. Under 2 MB.

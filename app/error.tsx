@@ -17,9 +17,7 @@ export default function ErrorPage({
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-16 text-center">
-      <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
-        Something went wrong
-      </h1>
+      <h1 className="heading-page">Something went wrong</h1>
       <p className="text-muted-foreground max-w-md text-[15px]">
         Usually a brief connection problem. Try again; if it keeps happening, tell us via the
         contact link below.

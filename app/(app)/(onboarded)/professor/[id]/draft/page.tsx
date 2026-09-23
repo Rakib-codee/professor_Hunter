@@ -62,9 +62,7 @@ export default async function DraftPage({ params }: PageProps<'/professor/[id]/d
 
       <div className="flex min-w-0 flex-col gap-4">
         <div>
-          <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
-            Draft your email
-          </h1>
+          <h1 className="heading-page">Draft your email</h1>
           <p className="text-muted-foreground mt-1 text-base">
             A first-contact email asking {professor.name_en} for a CSC acceptance letter, built from
             your profile.

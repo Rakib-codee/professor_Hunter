@@ -15,7 +15,7 @@ export default async function AdminProfessorsPage({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-      <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Professors</h1>
+      <h1 className="heading-page">Professors</h1>
       <form action="/admin/professors" method="get" role="search" className="flex gap-2">
         <Input
           type="search"

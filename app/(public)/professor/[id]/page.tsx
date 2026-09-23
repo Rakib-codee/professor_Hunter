@@ -72,7 +72,7 @@ export default async function ProfessorPage({ params }: PageProps<'/professor/[i
 
       <header className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
+          <h1 className="font-display text-[30px] leading-[1.1] md:text-[40px] md:leading-[1.05]">
             <ProfessorName nameEn={professor.name_en} nameCn={professor.name_cn} />
           </h1>
           {professor.title ? (

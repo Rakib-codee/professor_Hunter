@@ -17,8 +17,8 @@ export default async function TrackerPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
       <div className="flex flex-col gap-3">
-        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">My tracker</h1>
-        <dl className="tnum flex flex-wrap gap-x-6 gap-y-2 text-[15px]" aria-label="Summary">
+        <h1 className="heading-page">My tracker</h1>
+        <dl className="flex flex-wrap gap-x-7 gap-y-3 text-[15px]" aria-label="Summary">
           {[
             ['sent', summary.total],
             ['waiting', summary.waiting],
@@ -26,8 +26,8 @@ export default async function TrackerPage() {
             ['no reply', summary.noReply],
             ...(summary.bounced > 0 ? [['bounced', summary.bounced] as const] : []),
           ].map(([label, count]) => (
-            <div key={label} className="flex items-baseline gap-1.5">
-              <dd className="text-lg font-semibold">{count}</dd>
+            <div key={label} className="flex items-baseline gap-2">
+              <dd className="display-figure text-[28px]">{count}</dd>
               <dt className="text-muted-foreground">{label}</dt>
             </div>
           ))}

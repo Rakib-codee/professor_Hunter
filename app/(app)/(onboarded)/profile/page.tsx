@@ -21,7 +21,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-5">
-      <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Profile</h1>
+      <h1 className="heading-page">Profile</h1>
       <CompletenessBar result={completeness} />
       <Card>
         <CardHeader>

@@ -65,12 +65,12 @@ export function OutreachRow({ item }: OutreachRowProps) {
         {item.professor ? (
           <Link
             href={`/professor/${item.professor.id}`}
-            className="hover:text-primary text-lg leading-tight font-semibold underline-offset-4 hover:underline"
+            className="hover:text-primary font-display text-[20px] leading-[1.2] underline-offset-4 hover:underline"
           >
             <ProfessorName nameEn={item.professor.name_en} nameCn={item.professor.name_cn} />
           </Link>
         ) : (
-          <span className="text-lg leading-tight font-semibold">Professor no longer listed</span>
+          <span className="font-display text-[20px] leading-[1.2]">Professor no longer listed</span>
         )}
         {item.professor?.university_name ? (
           <span className="text-muted-foreground text-[15px]">

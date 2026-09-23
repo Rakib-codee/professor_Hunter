@@ -16,7 +16,7 @@ interface ProfessorCardProps {
 export function ProfessorCard({ professor, saved, isSignedIn }: ProfessorCardProps) {
   return (
     <article className="relative flex flex-col gap-2 py-5 pr-12">
-      <h3 className="text-lg leading-tight font-semibold">
+      <h3 className="font-display text-[20px] leading-[1.2] md:text-[22px]">
         <Link
           href={`/professor/${professor.id}`}
           className="hover:text-primary underline-offset-4 hover:underline"
