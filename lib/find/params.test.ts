@@ -35,7 +35,8 @@ describe('parseFindParams', () => {
     expect(parsed.accepts).toEqual(['confirmed']);
     expect(parsed.page).toBe(1);
     expect(parsed.q.length).toBe(100);
-    expect(parsed.tags).toEqual(['a']);
+    // Repeated keys are merged (checkbox groups submit `tags=a&tags=b`).
+    expect(parsed.tags).toEqual(['a', 'b']);
   });
 
   test('empty input yields defaults', () => {
@@ -73,5 +74,27 @@ describe('toggleInList', () => {
   test('adds when absent, removes when present', () => {
     expect(toggleInList(['A'], 'B')).toEqual(['A', 'B']);
     expect(toggleInList(['A', 'B'], 'A')).toEqual(['B']);
+  });
+});
+
+describe('parseFindParams with repeated query keys (HTML checkbox groups)', () => {
+  test('merges repeated accepts values instead of keeping only the first', () => {
+    const params = parseFindParams({ accepts: ['confirmed', 'team-reported'] });
+    expect(params.accepts).toEqual(['confirmed', 'team-reported']);
+  });
+
+  test('merges repeated tags values and still drops empty and invalid entries', () => {
+    const params = parseFindParams({
+      tags: ['Geotechnical Engineering', 'Bridge Engineering,'],
+      accepts: ['confirmed', 'bogus', ''],
+    });
+    expect(params.tags).toEqual(['Geotechnical Engineering', 'Bridge Engineering']);
+    expect(params.accepts).toEqual(['confirmed']);
+  });
+
+  test('ignores empty uni and province values submitted by the filter form', () => {
+    const params = parseFindParams({ uni: '', province: '' });
+    expect(params.uni).toBeNull();
+    expect(params.province).toBeNull();
   });
 });

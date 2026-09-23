@@ -33,8 +33,10 @@ function first(value: string | string[] | undefined): string {
   return (Array.isArray(value) ? value[0] : value) ?? '';
 }
 
+/** Comma lists may also arrive as repeated keys (`accepts=a&accepts=b` from checkbox groups). */
 function list(value: string | string[] | undefined): string[] {
-  return first(value)
+  const raw = Array.isArray(value) ? value.join(',') : (value ?? '');
+  return raw
     .split(',')
     .map((item) => item.trim())
     .filter((item) => item.length > 0 && item.length <= TEXT_MAX)
