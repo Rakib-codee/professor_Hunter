@@ -238,6 +238,15 @@ Three places carry the design; everywhere else the display face is absent.
 
 Body copy, forms, alerts, the draft editor, the tracker rows below the name, legal pages, the footer, admin tables and every button stay in Source Sans 3 exactly as shipped. Archivo never appears in a control, never below 20 px, never in a running sentence, and never in more than two sizes on one screen. Emphasis inside body text is Source Sans 600, not the display face. If a screen has no title and no name, it has no Archivo at all: login, signup, password reset and the legal pages keep their quiet 22 px Source Sans headings.
 
+## 8. Brand mark and header (implemented)
+
+The supplied logo is a dark-background render: gold four-point compass over a navy eagle head on an open book, with the wordmark beneath and two gold rules. The raster has a glow baked in and a broken alpha channel, so it is not usable directly. The emblem is redrawn as a flat vector (`components/layout/logo.tsx`, under 1 KB, `app/icon.svg` for the favicon) and the wordmark is set in type.
+
+- **Mark.** Compass always in gold `#C8922A`; eagle and book take `--logo-ink`: Cobalt on Paper, white inside the dark header. 32 px tall in the bar, 36 on desktop.
+- **Wordmark.** `PROFESSOR HUNTER` in Archivo Expanded 700 at 12 px, tracked 0.16 em. The one place the display face goes below 20 px (§7.5); it is a brand lockup, not a heading. `HUNTER` is gold in the header and Ink on Paper, where gold on white would fail text contrast.
+- **Header.** One bar on every page, Ink `#1C2331`, sticky, full-bleed, 56 px on phones and 64 on desktop. Section links are 13 px Source Sans 600, uppercase, tracked 0.12 em, at 70 % white; the current section is white with a 2 px gold bar on the bar's bottom edge. `Log in` is a gold button with Ink text (5.7:1); `Log out` is a white hairline outline. Phones get a 44 px hamburger and a full-width drop-down list with the current item marked by a gold left rule. Solid colour, no blur, no shadow (§4.5). The header re-scopes the colour tokens (`.site-header` in `globals.css`) so buttons passed into it need no dark-mode classes.
+- **Gold** is brand only: the compass, the current-section bar, the header's primary button and the admin tag. It never marks evidence and never appears in page content, so §1's rule that Cobalt is the only action colour still holds below the header.
+
 ## 9. Motion
 
 Users are on cheap Android phones over slow connections, so motion is spent only where something changes state, and never on scroll.
