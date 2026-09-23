@@ -12,3 +12,5 @@ AGENTS.md
 supabase/migrations
 .claude
 .mcp.json
+playwright-report
+test-results
