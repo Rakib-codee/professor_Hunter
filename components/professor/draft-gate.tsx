@@ -21,7 +21,7 @@ export function DraftGate({
     return (
       <Link
         href={`/login?next=${encodeURIComponent(`/professor/${professorId}/draft`)}`}
-        className={buttonVariants({ variant: 'outline' })}
+        className={buttonVariants({ variant: 'outline', size: 'lg', className: 'w-full' })}
       >
         Log in to draft an email
       </Link>
@@ -30,20 +30,22 @@ export function DraftGate({
   if (!isDraftEnabled) {
     return (
       <div className="flex flex-col gap-1">
-        <Button variant="outline" disabled>
+        <Button variant="outline" size="lg" className="w-full" disabled>
           Draft email
         </Button>
-        <p className="text-muted-foreground text-xs">Draft generation is coming in a few days.</p>
+        <p className="text-muted-foreground text-[13px]">
+          Draft generation is coming in a few days.
+        </p>
       </div>
     );
   }
   if ((completeness ?? 0) < COMPLETENESS_THRESHOLD) {
     return (
       <div className="flex flex-col gap-1">
-        <Button variant="outline" disabled>
+        <Button variant="outline" size="lg" className="w-full" disabled>
           Draft email
         </Button>
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-[13px]">
           Complete your profile to {COMPLETENESS_THRESHOLD}% first.{' '}
           <Link href="/profile" className="text-primary hover:underline">
             Edit profile
@@ -53,7 +55,10 @@ export function DraftGate({
     );
   }
   return (
-    <Link href={`/professor/${professorId}/draft`} className={buttonVariants({})}>
+    <Link
+      href={`/professor/${professorId}/draft`}
+      className={buttonVariants({ size: 'lg', className: 'w-full' })}
+    >
       Draft email
     </Link>
   );

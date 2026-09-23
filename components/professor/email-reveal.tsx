@@ -22,7 +22,7 @@ export function EmailReveal({ professorId, hasEmail, isSignedIn, onReveal }: Ema
 
   if (!hasEmail) {
     return (
-      <p className="text-muted-foreground text-sm">
+      <p className="text-muted-foreground text-[15px]">
         No email on file. Check the source page or the university directory.
       </p>
     );
@@ -31,7 +31,7 @@ export function EmailReveal({ professorId, hasEmail, isSignedIn, onReveal }: Ema
     return (
       <Link
         href={`/login?next=${encodeURIComponent(`/professor/${professorId}`)}`}
-        className={buttonVariants({})}
+        className={buttonVariants({ size: 'lg', className: 'w-full' })}
       >
         Log in to reveal email
       </Link>
@@ -46,8 +46,11 @@ export function EmailReveal({ professorId, hasEmail, isSignedIn, onReveal }: Ema
         >
           {result.email}
         </a>
-        <p className="text-muted-foreground text-xs">
-          {emailTypeLabel(result.emailType)} · {result.used} of {result.limit} reveals used today
+        <p className="text-muted-foreground tnum flex flex-wrap gap-x-3 text-[13px]">
+          <span>{emailTypeLabel(result.emailType)}</span>
+          <span>
+            {result.used} of {result.limit} reveals used today
+          </span>
         </p>
       </div>
     );
@@ -67,15 +70,15 @@ export function EmailReveal({ professorId, hasEmail, isSignedIn, onReveal }: Ema
 
   return (
     <div className="flex flex-col gap-1">
-      <Button type="button" onClick={reveal} disabled={pending}>
+      <Button type="button" size="lg" className="w-full" onClick={reveal} disabled={pending}>
         {pending ? 'Revealing…' : 'Reveal email'}
       </Button>
       {error ? (
-        <p role="alert" className="text-destructive text-xs">
+        <p role="alert" className="text-destructive text-[13px]">
           {error}
         </p>
       ) : (
-        <p className="text-muted-foreground text-xs">Counts toward your 30 reveals per day.</p>
+        <p className="text-muted-foreground text-[13px]">Counts toward your 30 reveals per day.</p>
       )}
     </div>
   );
