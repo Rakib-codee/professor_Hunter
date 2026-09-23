@@ -19,7 +19,7 @@ export function FilterForm({ basePath, params, facets }: FilterFormProps) {
     ...new Set(facets.universities.map((u) => u.province).filter((p): p is string => Boolean(p))),
   ].sort();
   const selectClass =
-    'border-input dark:bg-input/30 h-8 w-full rounded-lg border bg-transparent px-2.5 text-sm outline-none';
+    'border-control bg-background h-10 w-full rounded-sm border px-2.5 text-[15px] outline-none';
 
   return (
     <form action={basePath} method="get" className="flex flex-col gap-4">
@@ -58,9 +58,9 @@ export function FilterForm({ basePath, params, facets }: FilterFormProps) {
       </div>
 
       <fieldset className="flex flex-col gap-1.5">
-        <legend className="mb-1.5 text-sm font-medium">International students</legend>
+        <legend className="mb-1.5 text-[15px] font-medium">International students</legend>
         {ACCEPTS_OPTIONS.map((value) => (
-          <label key={value} className="flex items-center gap-2 text-sm">
+          <label key={value} className="flex min-h-8 items-center gap-2.5 text-[15px]">
             <input
               type="checkbox"
               name="accepts"
@@ -68,16 +68,18 @@ export function FilterForm({ basePath, params, facets }: FilterFormProps) {
               defaultChecked={params.accepts.includes(value)}
             />
             {acceptsLabel(value).text}
-            <span className="text-muted-foreground text-xs">{facets.accepts[value] ?? 0}</span>
+            <span className="text-muted-foreground tnum text-[13px]">
+              {facets.accepts[value] ?? 0}
+            </span>
           </label>
         ))}
       </fieldset>
 
-      <label className="flex items-center gap-2 text-sm">
+      <label className="flex min-h-8 items-center gap-2.5 text-[15px]">
         <input type="checkbox" name="uniEmail" value="1" defaultChecked={params.uniEmail} />
         University email only
       </label>
-      <p className="text-muted-foreground -mt-2 text-xs">
+      <p className="text-muted-foreground -mt-2 text-[13px]">
         Tip: university addresses bounce less and get more replies than personal ones.
       </p>
 

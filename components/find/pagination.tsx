@@ -16,7 +16,10 @@ export function Pagination({
   if (pages <= 1) return null;
   const page = Math.min(params.page, pages);
   return (
-    <nav className="flex items-center justify-between gap-2" aria-label="Pagination">
+    <nav
+      className="border-border flex items-center justify-between gap-2 border-t pt-4"
+      aria-label="Pagination"
+    >
       {page > 1 ? (
         <Link
           href={findHref(basePath, params, { page: page - 1 })}
@@ -29,7 +32,7 @@ export function Pagination({
           Previous
         </Button>
       )}
-      <span className="text-muted-foreground text-sm">
+      <span className="text-muted-foreground tnum text-[15px]">
         Page {page} of {pages}
       </span>
       {page < pages ? (

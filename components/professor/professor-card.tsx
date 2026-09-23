@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { ProfessorListItem } from '@/lib/data/professors';
-import { displayName } from '@/lib/utils/display';
-import { AcceptsBadge, EmailTypeBadge, VerifiedBadge } from './badges';
+import { ProfessorName } from './professor-name';
+import { RecordStrip } from './record-strip';
 import { SaveButton } from './save-button';
 import { TagChips } from './tag-chips';
 
@@ -12,35 +11,39 @@ interface ProfessorCardProps {
   isSignedIn: boolean;
 }
 
+// One record in the ledger (DESIGN.md §3): no box, hairline rules come from the parent list.
+// Order is fixed: name, title, university then school, research area, tags, record strip.
 export function ProfessorCard({ professor, saved, isSignedIn }: ProfessorCardProps) {
-  const affiliation = [professor.university_name, professor.school].filter(Boolean).join(' · ');
   return (
-    <Card size="sm" className="relative">
-      <CardHeader className="pr-12">
-        <CardTitle>
-          <Link href={`/professor/${professor.id}`} className="hover:underline">
-            {displayName(professor.name_en, professor.name_cn)}
-          </Link>
-        </CardTitle>
-        {professor.title ? (
-          <p className="text-muted-foreground text-xs">{professor.title}</p>
-        ) : null}
-        {affiliation ? <p className="text-xs">{affiliation}</p> : null}
-        <div className="absolute top-2 right-2">
-          <SaveButton professorId={professor.id} saved={saved} isSignedIn={isSignedIn} />
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        {professor.research_area ? (
-          <p className="text-muted-foreground line-clamp-2 text-sm">{professor.research_area}</p>
-        ) : null}
-        <TagChips tags={professor.research_tags} />
-        <div className="flex flex-wrap gap-1.5">
-          <AcceptsBadge value={professor.accepts_intl} />
-          <VerifiedBadge raw={professor.last_verified} parsed={professor.last_verified_on} />
-          <EmailTypeBadge value={professor.email_type} hasEmail={professor.has_email} />
-        </div>
-      </CardContent>
-    </Card>
+    <article className="relative flex flex-col gap-2 py-5 pr-12">
+      <h3 className="text-lg leading-tight font-semibold">
+        <Link
+          href={`/professor/${professor.id}`}
+          className="hover:text-primary underline-offset-4 hover:underline"
+        >
+          <ProfessorName nameEn={professor.name_en} nameCn={professor.name_cn} />
+        </Link>
+      </h3>
+      {professor.title ? (
+        <p className="text-muted-foreground -mt-1 text-[15px]">{professor.title}</p>
+      ) : null}
+      {professor.university_name || professor.school ? (
+        <p className="text-[15px] leading-snug">
+          {professor.university_name ? <span>{professor.university_name}</span> : null}
+          {professor.university_name && professor.school ? <br /> : null}
+          {professor.school ? (
+            <span className="text-muted-foreground">{professor.school}</span>
+          ) : null}
+        </p>
+      ) : null}
+      <div className="absolute top-3 right-0">
+        <SaveButton professorId={professor.id} saved={saved} isSignedIn={isSignedIn} />
+      </div>
+      {professor.research_area ? (
+        <p className="line-clamp-2 text-base">{professor.research_area}</p>
+      ) : null}
+      <TagChips tags={professor.research_tags} />
+      <RecordStrip professor={professor} className="mt-1" />
+    </article>
   );
 }

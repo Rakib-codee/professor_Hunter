@@ -10,27 +10,30 @@ interface TagFilterProps {
   untagged: number;
 }
 
-// Multi-select chips as links: the URL is the state.
+// Multi-select chips as links: the URL is the state. One scrolling row on phones so the
+// results stay near the top; wraps on wider screens (DESIGN.md §3).
 export function TagFilter({ basePath, params, tags, untagged }: TagFilterProps) {
   const chips = [...tags, ...(untagged > 0 ? [{ tag: OTHER_TAG, count: untagged }] : [])];
   return (
-    <ul className="flex flex-wrap gap-2" aria-label="Research tags">
+    <ul className="chip-row -mx-4 px-4 md:mx-0 md:px-0" aria-label="Research tags">
       {chips.map(({ tag, count }) => {
         const active = params.tags.includes(tag);
         return (
-          <li key={tag}>
+          <li key={tag} className="shrink-0">
             <Link
               href={findHref(basePath, params, { tags: toggleInList(params.tags, tag) })}
               aria-pressed={active}
               className={cn(
-                'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm transition-colors',
+                'inline-flex h-9 items-center gap-1.5 rounded-sm border px-3 text-[15px] whitespace-nowrap transition-colors',
                 active
                   ? 'bg-primary text-primary-foreground border-primary'
-                  : 'border-border hover:bg-muted',
+                  : 'border-control hover:bg-muted',
               )}
             >
               {tag === OTHER_TAG ? 'Other / unspecified' : tag}
-              <span className={cn('text-xs', active ? 'opacity-80' : 'text-muted-foreground')}>
+              <span
+                className={cn('tnum text-[13px]', active ? 'opacity-80' : 'text-muted-foreground')}
+              >
                 {count}
               </span>
             </Link>

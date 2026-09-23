@@ -7,11 +7,11 @@ export default function Loading() {
       <Skeleton className="h-4 w-72" />
       <div className="flex flex-wrap gap-2">
         {Array.from({ length: 8 }, (_, i) => (
-          <Skeleton key={i} className="h-8 w-32 rounded-full" />
+          <Skeleton key={i} className="h-9 w-32 rounded-sm" />
         ))}
       </div>
       {Array.from({ length: 4 }, (_, i) => (
-        <Skeleton key={i} className="h-36 w-full rounded-xl" />
+        <Skeleton key={i} className="h-40 w-full rounded-sm" />
       ))}
     </div>
   );

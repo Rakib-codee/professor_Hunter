@@ -68,8 +68,8 @@ export default async function FindMajorPage({ params, searchParams }: PageProps<
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{field}</h1>
-        <p className="text-muted-foreground text-sm">
+        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">{field}</h1>
+        <p className="text-muted-foreground tnum mt-1 text-base">
           {facets.total} professors across {facets.universities.length} universities
         </p>
       </div>
@@ -82,22 +82,24 @@ export default async function FindMajorPage({ params, searchParams }: PageProps<
           <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
         </div>
       </div>
-      <div className="grid gap-6 md:grid-cols-[220px_1fr]">
-        <aside className="hidden md:block">{filters}</aside>
+      <div className="grid gap-8 md:grid-cols-[240px_1fr]">
+        <aside className="bg-muted hidden self-start rounded-sm p-4 md:block">{filters}</aside>
         <section className="flex flex-col gap-3" aria-label="Results">
-          <p className="text-muted-foreground text-sm">
+          <p className="tnum text-base font-semibold">
             {result.total === 0
               ? 'No professors match. Try fewer filters.'
               : `${result.total} results`}
           </p>
-          {result.items.map((professor) => (
-            <ProfessorCard
-              key={professor.id}
-              professor={professor}
-              saved={savedIds.has(professor.id)}
-              isSignedIn={Boolean(userId)}
-            />
-          ))}
+          <div className="ledger border-border border-t">
+            {result.items.map((professor) => (
+              <ProfessorCard
+                key={professor.id}
+                professor={professor}
+                saved={savedIds.has(professor.id)}
+                isSignedIn={Boolean(userId)}
+              />
+            ))}
+          </div>
           <Pagination basePath={basePath} params={find} total={result.total} />
         </section>
       </div>

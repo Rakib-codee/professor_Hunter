@@ -24,7 +24,7 @@ export function SearchBox({ basePath, params }: { basePath: string; params: Find
         aria-label="Search professors"
         maxLength={100}
       />
-      <Button type="submit" variant="outline" size="icon" aria-label="Search">
+      <Button type="submit" variant="outline" size="icon" aria-label="Search" className="shrink-0">
         <SearchIcon />
       </Button>
     </form>

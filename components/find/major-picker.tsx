@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChevronRightIcon } from 'lucide-react';
 import { MAJORS } from '@/lib/constants';
 import type { MajorCount } from '@/lib/data/professors';
 
@@ -9,30 +9,44 @@ interface MajorPickerProps {
   preferredField: string | null;
 }
 
+// Majors as a ledger (DESIGN.md §3): full-width rows, counts on the right, hairline rules.
 export function MajorPicker({ counts, preferredField }: MajorPickerProps) {
   const ordered = [...MAJORS].sort((a, b) =>
     a.field === preferredField ? -1 : b.field === preferredField ? 1 : 0,
   );
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
+    <ul className="ledger border-border border-y">
       {ordered.map((major) => {
         const count = counts[major.field];
+        const isPreferred = major.field === preferredField;
         return (
-          <Link key={major.slug} href={`/find/${major.slug}`} className="block">
-            <Card className="hover:bg-muted/50 h-full transition-colors">
-              <CardHeader>
-                <CardTitle>{major.field}</CardTitle>
-                <CardDescription>
-                  {count
-                    ? `${count.professors} professors · ${count.universities} universities`
-                    : 'No professors yet'}
-                  {major.field === preferredField ? ' · your field' : ''}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
+          <li key={major.slug}>
+            <Link
+              href={`/find/${major.slug}`}
+              className="hover:bg-muted focus-visible:bg-muted flex min-h-16 items-center justify-between gap-4 py-3 pr-1 pl-1 transition-colors"
+            >
+              <span className="flex flex-col gap-0.5">
+                <span className="text-lg leading-tight font-semibold">{major.field}</span>
+                {isPreferred ? (
+                  <span className="text-primary text-[13px] font-medium">your field</span>
+                ) : null}
+              </span>
+              <span className="text-muted-foreground tnum flex shrink-0 items-center gap-2 text-right text-[13px] leading-tight">
+                {count ? (
+                  <span>
+                    {count.professors} professors
+                    <br />
+                    {count.universities} universities
+                  </span>
+                ) : (
+                  <span>No professors yet</span>
+                )}
+                <ChevronRightIcon className="size-4" aria-hidden="true" />
+              </span>
+            </Link>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }
