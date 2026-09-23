@@ -19,9 +19,9 @@ export function CompletenessBar({ result }: CompletenessBarProps) {
         <ProgressValue />
       </Progress>
       {result.isReady ? (
-        <p className="text-muted-foreground text-xs">Ready to generate drafts.</p>
+        <p className="text-muted-foreground text-[15px]">Ready to generate drafts.</p>
       ) : (
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-[15px]">
           Reach {COMPLETENESS_THRESHOLD}% to unlock drafts. Missing: {listed.join(', ')}
           {extra > 0 ? ` and ${extra} more` : ''}.
         </p>

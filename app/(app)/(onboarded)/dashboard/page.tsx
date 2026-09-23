@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { CompletenessBar } from '@/components/profile/completeness-bar';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChevronRightIcon } from 'lucide-react';
 import { getDueFollowUps } from '@/lib/data/outreach';
 import { getCurrentStudent, getResumeProfessor, getTrackerCounts } from '@/lib/data/students';
 import { computeCompleteness } from '@/lib/profile/completeness';
@@ -24,79 +24,93 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">
+        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
           {firstName ? `Hi ${firstName}` : 'Dashboard'}
         </h1>
         <CompletenessBar result={completeness} />
       </div>
 
       {resume ? (
-        <Link href={`/professor/${resume.id}`} className="block">
-          <Card size="sm" className="hover:bg-muted/50 transition-colors">
-            <CardHeader>
-              <CardDescription>Resume where you left off</CardDescription>
-              <CardTitle>
-                {resume.name_en}
-                {resume.university_name ? ` · ${resume.university_name}` : ''}
-              </CardTitle>
-            </CardHeader>
-          </Card>
+        <Link
+          href={`/professor/${resume.id}`}
+          className="bg-muted hover:bg-accent flex items-center justify-between gap-3 rounded-sm px-4 py-3 transition-colors"
+        >
+          <span className="flex flex-col gap-0.5">
+            <span className="text-muted-foreground text-[13px]">Resume where you left off</span>
+            <span className="text-lg leading-tight font-semibold">{resume.name_en}</span>
+            {resume.university_name ? (
+              <span className="text-[15px]">{resume.university_name}</span>
+            ) : null}
+          </span>
+          <ChevronRightIcon className="text-muted-foreground size-5 shrink-0" aria-hidden="true" />
         </Link>
       ) : null}
 
       {due.length > 0 ? (
-        <section className="flex flex-col gap-2 rounded-xl border p-4" aria-label="Follow-ups due">
-          <h2 className="text-sm font-medium">Follow-ups due</h2>
-          <ul className="flex flex-col gap-1 text-sm">
+        <section
+          className="border-l-primary flex flex-col gap-2 border-l-[3px] pl-4"
+          aria-label="Follow-ups due"
+        >
+          <h2 className="text-[15px] font-semibold">Follow-ups due</h2>
+          <ul className="flex flex-col gap-1.5 text-[15px]">
             {due.map((item) => (
-              <li key={item.id} className="flex justify-between gap-2">
-                <Link href={`/professor/${item.professor_id}`} className="hover:underline">
+              <li key={item.id} className="flex flex-wrap justify-between gap-x-3 gap-y-0.5">
+                <Link
+                  href={`/professor/${item.professor_id}`}
+                  className="hover:text-primary underline-offset-4 hover:underline"
+                >
                   {item.professor_name ?? 'Professor'}
                 </Link>
-                <span className="text-muted-foreground text-xs">
-                  sent {item.sent_on} · due {item.follow_up_on}
+                <span className="text-muted-foreground tnum flex gap-x-3 text-[13px]">
+                  <span>sent {item.sent_on}</span>
+                  <span className="text-primary">due {item.follow_up_on}</span>
                 </span>
               </li>
             ))}
           </ul>
-          <Link href="/tracker" className="text-primary text-xs hover:underline">
+          <Link href="/tracker" className="text-primary text-[15px] underline underline-offset-4">
             Open tracker
           </Link>
         </section>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        <Link href="/find" className="block">
-          <Card className="hover:bg-muted/50 h-full transition-colors">
-            <CardHeader>
-              <CardTitle>Find professors</CardTitle>
-              <CardDescription>Browse by major, research tag and university.</CardDescription>
-            </CardHeader>
-          </Card>
-        </Link>
-        <Link href="/tracker" className="block">
-          <Card className="hover:bg-muted/50 h-full transition-colors">
-            <CardHeader>
-              <CardTitle>My tracker</CardTitle>
-              <CardDescription>
-                {counts.sent} sent · {counts.replied} replied · {counts.noReply} no reply
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </Link>
-        <Link href="/profile" className="block">
-          <Card className="hover:bg-muted/50 h-full transition-colors">
-            <CardHeader>
-              <CardTitle>Edit profile</CardTitle>
-              <CardDescription>
-                {completeness.isReady
-                  ? 'Keep it current for better drafts.'
-                  : 'Finish it to unlock drafts.'}
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </Link>
-      </div>
+      <ul className="ledger border-border border-y">
+        {[
+          {
+            href: '/find',
+            title: 'Find professors',
+            meta: 'Browse by major, research tag and university.',
+          },
+          {
+            href: '/tracker',
+            title: 'My tracker',
+            meta: `${counts.sent} sent, ${counts.replied} replied, ${counts.noReply} no reply`,
+          },
+          {
+            href: '/profile',
+            title: 'Edit profile',
+            meta: completeness.isReady
+              ? 'Keep it current for better drafts.'
+              : 'Finish it to unlock drafts.',
+          },
+        ].map((entry) => (
+          <li key={entry.href}>
+            <Link
+              href={entry.href}
+              className="hover:bg-muted flex min-h-16 items-center justify-between gap-4 px-1 py-3 transition-colors"
+            >
+              <span className="flex flex-col gap-0.5">
+                <span className="text-lg leading-tight font-semibold">{entry.title}</span>
+                <span className="text-muted-foreground tnum text-[15px]">{entry.meta}</span>
+              </span>
+              <ChevronRightIcon
+                className="text-muted-foreground size-5 shrink-0"
+                aria-hidden="true"
+              />
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -12,16 +12,27 @@ import {
 import { Button } from '@/components/ui/button';
 import type { OutreachItem } from '@/lib/data/outreach';
 import { OUTREACH_STATUSES, statusLabel, type OutreachStatus } from '@/lib/tracker/status';
-import { displayName } from '@/lib/utils/display';
+import { ProfessorName } from '@/components/professor/professor-name';
+import { cn } from 'cn';
 
 interface OutreachRowProps {
   item: OutreachItem;
 }
 
 const selectClass =
-  'border-input dark:bg-input/30 h-8 rounded-lg border bg-transparent px-2 text-sm outline-none focus-visible:ring-3';
+  'border-input bg-background h-10 rounded-sm border px-2 text-[15px] outline-none focus-visible:ring-3';
 const inputClass =
-  'border-input dark:bg-input/30 h-8 rounded-lg border bg-transparent px-2 text-sm outline-none focus-visible:ring-3';
+  'border-input bg-background tnum h-10 rounded-sm border px-2 text-[15px] outline-none focus-visible:ring-3';
+
+// Status colour reuses the evidence families (DESIGN.md §3 tracker); waiting stays neutral.
+const STATUS_CLASS: Record<OutreachStatus, string> = {
+  sent: 'text-foreground',
+  replied_positive: 'text-confirmed border-confirmed',
+  replied_conditional: 'text-caution-foreground border-caution-foreground',
+  replied_negative: 'text-negative-foreground border-negative-foreground',
+  no_reply: 'text-muted-foreground',
+  bounced: 'text-negative-foreground border-negative-foreground',
+};
 
 function isDue(followUpOn: string | null, status: OutreachStatus): boolean {
   if (!followUpOn || status !== 'sent') return false;
@@ -43,29 +54,35 @@ export function OutreachRow({ item }: OutreachRowProps) {
       if (!result.ok) setError(result.error ?? 'Could not save.');
     });
 
-  const name = item.professor
-    ? displayName(item.professor.name_en, item.professor.name_cn)
-    : 'Professor no longer listed';
-
   return (
-    <li className="flex flex-col gap-2 rounded-xl border p-3 sm:grid sm:grid-cols-[1fr_auto_auto_auto] sm:items-start sm:gap-3">
-      <div className="flex flex-col gap-0.5">
+    <li
+      className={cn(
+        'flex flex-col gap-3 py-4 sm:grid sm:grid-cols-[1fr_auto_auto_auto] sm:items-start sm:gap-4',
+        due && 'border-l-primary -ml-3 border-l-[3px] pl-3',
+      )}
+    >
+      <div className="flex flex-col gap-1">
         {item.professor ? (
-          <Link href={`/professor/${item.professor.id}`} className="font-medium hover:underline">
-            {name}
+          <Link
+            href={`/professor/${item.professor.id}`}
+            className="hover:text-primary text-lg leading-tight font-semibold underline-offset-4 hover:underline"
+          >
+            <ProfessorName nameEn={item.professor.name_en} nameCn={item.professor.name_cn} />
           </Link>
         ) : (
-          <span className="font-medium">{name}</span>
+          <span className="text-lg leading-tight font-semibold">Professor no longer listed</span>
         )}
         {item.professor?.university_name ? (
-          <span className="text-muted-foreground text-xs">{item.professor.university_name}</span>
+          <span className="text-muted-foreground text-[15px]">
+            {item.professor.university_name}
+          </span>
         ) : null}
-        <span className="text-muted-foreground text-xs">
-          Sent {item.sent_on}
-          {item.reply_on ? ` · replied ${item.reply_on}` : ''}
+        <span className="text-muted-foreground tnum flex flex-wrap gap-x-4 text-[13px]">
+          <span>Sent {item.sent_on}</span>
+          {item.reply_on ? <span>replied {item.reply_on}</span> : null}
         </span>
         <textarea
-          className="border-input dark:bg-input/30 mt-1 min-h-8 w-full rounded-lg border bg-transparent px-2 py-1 text-sm outline-none focus-visible:ring-3"
+          className="border-input bg-background mt-1 min-h-10 w-full rounded-sm border px-2 py-1.5 text-[15px] outline-none focus-visible:ring-3"
           placeholder="Notes"
           value={notes}
           maxLength={1000}
@@ -77,10 +94,10 @@ export function OutreachRow({ item }: OutreachRowProps) {
           }}
         />
       </div>
-      <label className="flex flex-col gap-1 text-xs">
+      <label className="flex flex-col gap-1 text-[13px] font-medium">
         Status
         <select
-          className={selectClass}
+          className={cn(selectClass, STATUS_CLASS[item.status])}
           value={item.status}
           disabled={pending}
           onChange={(event) =>
@@ -96,8 +113,10 @@ export function OutreachRow({ item }: OutreachRowProps) {
           ))}
         </select>
       </label>
-      <label className="flex flex-col gap-1 text-xs">
-        Follow up{due ? <span className="text-destructive"> · due</span> : null}
+      <label className="flex flex-col gap-1 text-[13px] font-medium">
+        <span className="flex gap-2">
+          Follow up{due ? <span className="text-primary">due</span> : null}
+        </span>
         <input
           type="date"
           className={inputClass}
@@ -108,26 +127,26 @@ export function OutreachRow({ item }: OutreachRowProps) {
           }
         />
       </label>
-      <div className="flex items-start gap-1 sm:pt-4">
+      <div className="flex items-start gap-1 sm:pt-6">
         {confirmDelete ? (
           <>
             <Button
               type="button"
-              size="xs"
+              size="sm"
               variant="destructive"
               disabled={pending}
               onClick={() => run(() => deleteOutreach(item.id))}
             >
               Delete
             </Button>
-            <Button type="button" size="xs" variant="ghost" onClick={() => setConfirmDelete(false)}>
+            <Button type="button" size="sm" variant="ghost" onClick={() => setConfirmDelete(false)}>
               Keep
             </Button>
           </>
         ) : (
           <Button
             type="button"
-            size="icon-xs"
+            size="icon-sm"
             variant="ghost"
             aria-label="Delete entry"
             onClick={() => setConfirmDelete(true)}
@@ -137,7 +156,7 @@ export function OutreachRow({ item }: OutreachRowProps) {
         )}
       </div>
       {error ? (
-        <p role="alert" className="text-destructive text-xs sm:col-span-4">
+        <p role="alert" className="text-destructive text-[13px] sm:col-span-4">
           {error}
         </p>
       ) : null}

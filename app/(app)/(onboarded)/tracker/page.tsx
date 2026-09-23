@@ -15,30 +15,39 @@ export default async function TrackerPage() {
   const summary = summarize(items);
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">My tracker</h1>
-        <p className="text-muted-foreground text-sm">
-          {summary.total} sent · {summary.waiting} waiting · {summary.replied} replied ·{' '}
-          {summary.noReply} no reply
-          {summary.bounced > 0 ? ` · ${summary.bounced} bounced` : ''}
-        </p>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
+      <div className="flex flex-col gap-3">
+        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">My tracker</h1>
+        <dl className="tnum flex flex-wrap gap-x-6 gap-y-2 text-[15px]" aria-label="Summary">
+          {[
+            ['sent', summary.total],
+            ['waiting', summary.waiting],
+            ['replied', summary.replied],
+            ['no reply', summary.noReply],
+            ...(summary.bounced > 0 ? [['bounced', summary.bounced] as const] : []),
+          ].map(([label, count]) => (
+            <div key={label} className="flex items-baseline gap-1.5">
+              <dd className="text-lg font-semibold">{count}</dd>
+              <dt className="text-muted-foreground">{label}</dt>
+            </div>
+          ))}
+        </dl>
       </div>
       {items.length === 0 ? (
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-base">
           Nothing tracked yet. Generate a draft from a professor page and press “I sent this”.{' '}
           <Link href="/find" className="text-primary hover:underline">
             Find professors
           </Link>
         </p>
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="ledger border-border border-y">
           {items.map((item) => (
             <OutreachRow key={item.id} item={item} />
           ))}
         </ul>
       )}
-      <p className="text-muted-foreground text-xs">
+      <p className="text-muted-foreground text-[13px]">
         Marking an email as bounced also reports the address to us.
       </p>
     </div>
