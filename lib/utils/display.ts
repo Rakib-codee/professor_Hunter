@@ -41,14 +41,15 @@ export function verifiedLabel(
   return { text, isStale: monthsBetween(date, now) > STALE_AFTER_MONTHS };
 }
 
-export type Tone = 'positive' | 'neutral' | 'negative';
+/** positive = official list, caution = team-reported (softer evidence), neutral = unknown. */
+export type Tone = 'positive' | 'caution' | 'neutral' | 'negative';
 
 export function acceptsLabel(value: AcceptsIntl | null | undefined): { text: string; tone: Tone } {
   switch (value) {
     case 'confirmed':
       return { text: 'Accepts international students (official list)', tone: 'positive' };
     case 'team-reported':
-      return { text: 'Accepts international students (team-reported)', tone: 'positive' };
+      return { text: 'Accepts international students (team-reported)', tone: 'caution' };
     case 'no':
       return { text: 'Not accepting international students', tone: 'negative' };
     default:

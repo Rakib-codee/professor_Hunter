@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { SignOutButton } from '@/components/auth/sign-out-button';
-import { buttonVariants } from '@/components/ui/button';
+import { SiteHeader } from '@/components/layout/site-header';
 import { getCurrentStudent } from '@/lib/data/students';
 
 // Authenticated shell. proxy.ts already redirects anonymous requests; this re-checks on the
@@ -11,34 +10,20 @@ export default async function AppLayout({ children }: LayoutProps<'/'>) {
   const student = await getCurrentStudent();
   if (!student) redirect('/login');
 
+  const links = [
+    { href: '/find', label: 'Find' },
+    { href: '/saved', label: 'Saved' },
+    { href: '/tracker', label: 'Tracker' },
+    { href: '/profile', label: 'Profile' },
+    ...(student.role === 'admin' ? [{ href: '/admin', label: 'Admin' }] : []),
+  ];
+
   return (
     <>
-      <header className="border-border flex items-center justify-between border-b px-4 py-3">
-        <Link href="/dashboard" className="font-semibold tracking-tight">
-          Professor Hunter
-        </Link>
-        <nav className="flex items-center gap-1">
-          <Link href="/find" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-            Find
-          </Link>
-          <Link href="/saved" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-            Saved
-          </Link>
-          <Link href="/tracker" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-            Tracker
-          </Link>
-          <Link href="/profile" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-            Profile
-          </Link>
-          {student.role === 'admin' ? (
-            <Link href="/admin" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
-              Admin
-            </Link>
-          ) : null}
-          <SignOutButton />
-        </nav>
-      </header>
-      <main className="flex flex-1 flex-col px-4 py-6">{children}</main>
+      <SiteHeader homeHref="/dashboard" links={links}>
+        <SignOutButton />
+      </SiteHeader>
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-6">{children}</main>
     </>
   );
 }

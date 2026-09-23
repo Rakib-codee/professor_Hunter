@@ -39,7 +39,7 @@ describe('acceptsLabel', () => {
     });
     expect(acceptsLabel('team-reported')).toEqual({
       text: 'Accepts international students (team-reported)',
-      tone: 'positive',
+      tone: 'caution',
     });
     expect(acceptsLabel('unknown')).toEqual({
       text: 'International acceptance unknown',

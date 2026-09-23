@@ -49,7 +49,7 @@ export function SaveButton({ professorId, saved, isSignedIn, size = 'icon-sm' }:
       aria-pressed={optimistic}
       aria-label={optimistic ? 'Remove from saved' : 'Save professor'}
     >
-      <HeartIcon className={cn(optimistic && 'fill-current text-red-600')} />
+      <HeartIcon className={cn(optimistic && 'text-primary fill-current')} />
       {size === 'default' ? (optimistic ? 'Saved' : 'Save') : null}
     </Button>
   );

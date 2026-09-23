@@ -6,7 +6,9 @@ export function TagChips({ tags }: { tags: readonly string[] }) {
     <ul className="flex flex-wrap gap-1.5" aria-label="Research tags">
       {tags.map((tag) => (
         <li key={tag}>
-          <Badge variant="outline">{tag}</Badge>
+          <Badge variant="outline" className="border-control font-normal">
+            {tag}
+          </Badge>
         </li>
       ))}
     </ul>

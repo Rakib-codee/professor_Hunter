@@ -1,3 +1,4 @@
+import { Building2Icon, CalendarDaysIcon, CheckIcon, MailXIcon, UserIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from 'cn';
 import {
@@ -6,19 +7,28 @@ import {
   verifiedLabel,
   type AcceptsIntl,
   type EmailType,
+  type Tone,
 } from '@/lib/utils/display';
 
-// Badge copy is fixed in PLAN.md §6. "unknown" is never green.
+// Badge copy is fixed in PLAN.md §6. Treatment follows DESIGN.md §1: acceptance is the only
+// badge that carries colour, and each evidence level has its own family. Verification and email
+// type are provenance, never green.
 
-const TONE_CLASS = {
-  positive: 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200',
-  neutral: 'bg-muted text-muted-foreground',
-  negative: 'bg-destructive/10 text-destructive',
-} as const;
+const TONE_CLASS: Record<Tone, string> = {
+  positive: 'bg-confirmed text-confirmed-foreground border-confirmed',
+  caution: 'bg-caution text-caution-foreground border-caution-foreground',
+  neutral: 'bg-muted text-muted-foreground border-muted-foreground',
+  negative: 'bg-negative text-negative-foreground border-negative-foreground',
+};
 
 export function AcceptsBadge({ value }: { value: AcceptsIntl | null }) {
   const { text, tone } = acceptsLabel(value);
-  return <Badge className={TONE_CLASS[tone]}>{text}</Badge>;
+  return (
+    <Badge className={TONE_CLASS[tone]}>
+      {tone === 'positive' ? <CheckIcon aria-hidden="true" /> : null}
+      {text}
+    </Badge>
+  );
 }
 
 export function VerifiedBadge({ raw, parsed }: { raw: string | null; parsed: string | null }) {
@@ -26,11 +36,15 @@ export function VerifiedBadge({ raw, parsed }: { raw: string | null; parsed: str
   return (
     <Badge
       variant="outline"
-      className={cn(isStale && 'text-muted-foreground border-dashed')}
+      className={cn(
+        'text-muted-foreground tnum border-transparent px-0',
+        isStale && 'border-border border-dashed px-2',
+      )}
       title={isStale ? 'Verified over a year ago' : undefined}
     >
+      <CalendarDaysIcon aria-hidden="true" />
       {text}
-      {isStale ? ' · stale' : ''}
+      {isStale ? ' (may be outdated)' : ''}
     </Badge>
   );
 }
@@ -43,11 +57,16 @@ export function EmailTypeBadge({
   hasEmail: boolean;
 }) {
   const text = hasEmail ? emailTypeLabel(value) : emailTypeLabel('none');
+  const Icon = !hasEmail ? MailXIcon : value === 'university' ? Building2Icon : UserIcon;
   return (
     <Badge
-      variant={hasEmail ? 'secondary' : 'outline'}
-      className={cn(!hasEmail && 'text-muted-foreground')}
+      variant="outline"
+      className={cn(
+        'text-muted-foreground border-transparent px-0',
+        !hasEmail && 'bg-muted border-border border-dashed px-2',
+      )}
     >
+      <Icon aria-hidden="true" />
       {text}
     </Badge>
   );
