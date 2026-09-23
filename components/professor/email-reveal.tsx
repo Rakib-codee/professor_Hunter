@@ -10,10 +10,12 @@ interface EmailRevealProps {
   professorId: string;
   hasEmail: boolean;
   isSignedIn: boolean;
+  /** Called with the revealed address (the draft page uses it for the mailto link). */
+  onReveal?: (email: string) => void;
 }
 
 // Email is only ever fetched through reveal_professor_email() (30/day). Never rendered from props.
-export function EmailReveal({ professorId, hasEmail, isSignedIn }: EmailRevealProps) {
+export function EmailReveal({ professorId, hasEmail, isSignedIn, onReveal }: EmailRevealProps) {
   const [result, setResult] = useState<RevealResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -55,8 +57,12 @@ export function EmailReveal({ professorId, hasEmail, isSignedIn }: EmailRevealPr
     startTransition(async () => {
       setError(null);
       const response = await revealEmail(professorId);
-      if (response.ok && response.data) setResult(response.data);
-      else setError(response.error ?? 'Something went wrong.');
+      if (response.ok && response.data) {
+        setResult(response.data);
+        if (response.data.email) onReveal?.(response.data.email);
+      } else {
+        setError(response.error ?? 'Something went wrong.');
+      }
     });
 
   return (

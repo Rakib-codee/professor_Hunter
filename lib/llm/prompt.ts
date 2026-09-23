@@ -62,6 +62,9 @@ export function buildMessages(input: DraftInput): Messages {
       ? `Professor tags: ${professor.researchTags.join(', ')}`
       : null,
     input.whyLine ? `\nWhy this professor (applicant's words): ${input.whyLine}` : null,
+    input.retryHint
+      ? `\nYour previous attempt was rejected: ${input.retryHint}. Fix this while keeping every other rule.`
+      : null,
     `\nTone: ${tone}`,
   ];
 

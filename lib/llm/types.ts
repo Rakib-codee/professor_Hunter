@@ -34,6 +34,8 @@ export interface DraftInput {
   tone: Tone;
   /** Optional one-liner from the student: why this professor. ≤ 200 chars, validated upstream. */
   whyLine?: string;
+  /** Set on the single retry after validation failed: what to fix. */
+  retryHint?: string;
 }
 
 export interface DraftOutput {

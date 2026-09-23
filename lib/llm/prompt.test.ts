@@ -45,6 +45,13 @@ describe('buildMessages', () => {
     expect(user).toContain('CSC Type B 2027');
   });
 
+  test('retry hint is appended on the second attempt only', () => {
+    expect(buildMessages(DRAFT_INPUT_FIXTURE).user).not.toMatch(/previous attempt/i);
+    expect(buildMessages({ ...DRAFT_INPUT_FIXTURE, retryHint: 'body too long' }).user).toMatch(
+      /previous attempt was rejected: body too long/i,
+    );
+  });
+
   test('omits blank facts instead of printing null', () => {
     const { user } = buildMessages({
       ...DRAFT_INPUT_FIXTURE,
