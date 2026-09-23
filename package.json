@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "import:csv": "tsx --env-file=.env.local scripts/import-csv.ts",
     "compare:drafts": "tsx --env-file=.env.local scripts/compare-drafts.ts",
-    "check": "npm run lint && npm run typecheck && npm run format:check && npm run test"
+    "check": "npm run lint && npm run typecheck && npm run format:check && npm run test",
+    "test:db": "vitest run --config vitest.db.config.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

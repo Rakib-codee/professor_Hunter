@@ -45,6 +45,7 @@ jobs:
       - run: npx playwright test
         env:
           PLAYWRIGHT_WEB_SERVER: npm start
+      - run: npm run test:db
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

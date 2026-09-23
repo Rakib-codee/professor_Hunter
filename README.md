@@ -25,6 +25,7 @@ npm run dev
 | `npm run dev`                                   | Dev server                                   |
 | `npm run check`                                 | lint + typecheck + format check + unit tests |
 | `npm run test` / `test:watch` / `test:coverage` | Vitest                                       |
+| `npm run test:db`                               | DB security checks against Supabase (REST)   |
 | `npm run format`                                | Prettier                                     |
 
 ## Data
