@@ -26,7 +26,7 @@ const serverSchema = publicSchema.extend({
   DEEPSEEK_API_KEY: z.string().default(''),
   DEEPSEEK_MODEL: z.string().default('deepseek-flash'),
   GROQ_API_KEY: z.string().default(''),
-  GROQ_MODEL: z.string().default('llama-3.3-70b-versatile'),
+  GROQ_MODEL: z.string().default('qwen/qwen3.8-27b'),
 });
 
 export type PublicEnv = z.infer<typeof publicSchema>;
