@@ -61,3 +61,10 @@ out/
 
 # local MCP client config
 /.mcp.json
+
+# internal docs — local only (plan, backlog, product spec, agent instructions)
+/PLAN.md
+/BACKLOG.md
+/AGENTS.md
+/CLAUDE.md
+/professor_hunter_master_prompt_v2.md

@@ -2,7 +2,7 @@
 
 Helps international students applying for master's/PhD programs in China (mainly CSC Type B) find suitable supervisors, draft a personalised acceptance-letter request email, and track replies. We never send email on anyone's behalf.
 
-Plan and architecture: [PLAN.md](PLAN.md). Product spec: [professor_hunter_master_prompt_v2.md](professor_hunter_master_prompt_v2.md).
+Internal planning docs (plan, backlog, product spec) are kept out of this repository.
 
 ## Stack
 
@@ -29,4 +29,4 @@ npm run dev
 
 ## Data
 
-`research_tags.json` at the repo root is tracked. `professor_hunter_dataset_v4.csv` (real professor emails, internal notes) is **not** committed — keep it locally at the repo root; the data of record is the Supabase `professors` table. Import rules are in PLAN.md §2.
+`research_tags.json` at the repo root is tracked. `professor_hunter_dataset_v4.csv` (real professor emails, internal notes) is **not** committed — keep it locally at the repo root; the data of record is the Supabase `professors` table. Import rules live in `lib/import/`.
