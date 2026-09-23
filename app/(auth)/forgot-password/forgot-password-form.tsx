@@ -20,8 +20,8 @@ export function ForgotPasswordForm({ turnstileSiteKey }: ForgotPasswordFormProps
     // key: remount after each submit so echoed defaultValues apply and the CAPTCHA resets.
     <form key={state.attempt} action={action} className="flex flex-col gap-4" noValidate>
       <div>
-        <h1 className="text-xl font-semibold">Reset your password</h1>
-        <p className="text-muted-foreground text-sm">
+        <h1 className="text-[22px] leading-tight font-semibold">Reset your password</h1>
+        <p className="text-muted-foreground text-[15px]">
           Enter your email and we will send you a link to choose a new password.
         </p>
       </div>
@@ -41,7 +41,7 @@ export function ForgotPasswordForm({ turnstileSiteKey }: ForgotPasswordFormProps
           <SubmitButton pendingText="Sending…">Send reset link</SubmitButton>
         </>
       )}
-      <p className="text-muted-foreground text-sm">
+      <p className="text-muted-foreground text-[15px]">
         <Link href="/login" className="text-primary hover:underline">
           Back to log in
         </Link>

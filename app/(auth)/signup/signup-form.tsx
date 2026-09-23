@@ -22,8 +22,8 @@ export function SignupForm({ next, turnstileSiteKey }: SignupFormProps) {
     // key: remount after each submit so echoed defaultValues apply and the CAPTCHA resets.
     <form key={state.attempt} action={action} className="flex flex-col gap-4" noValidate>
       <div>
-        <h1 className="text-xl font-semibold">Create your account</h1>
-        <p className="text-muted-foreground text-sm">
+        <h1 className="text-[22px] leading-tight font-semibold">Create your account</h1>
+        <p className="text-muted-foreground text-[15px]">
           Free. Save professors, generate drafts and track replies.
         </p>
       </div>
@@ -59,7 +59,7 @@ export function SignupForm({ next, turnstileSiteKey }: SignupFormProps) {
       />
       <CaptchaField siteKey={turnstileSiteKey} resetKey={state.attempt} />
       <SubmitButton pendingText="Creating account…">Create account</SubmitButton>
-      <p className="text-muted-foreground text-xs">
+      <p className="text-muted-foreground text-[13px]">
         By signing up you agree to the{' '}
         <Link href="/terms" className="underline">
           terms
@@ -70,7 +70,7 @@ export function SignupForm({ next, turnstileSiteKey }: SignupFormProps) {
         </Link>
         .
       </p>
-      <p className="text-muted-foreground text-sm">
+      <p className="text-muted-foreground text-[15px]">
         Already have an account?{' '}
         <Link
           href={`/login?next=${encodeURIComponent(next)}`}

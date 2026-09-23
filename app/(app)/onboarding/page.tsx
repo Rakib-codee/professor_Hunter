@@ -35,7 +35,7 @@ export default async function OnboardingPage({ searchParams }: PageProps<'/onboa
   const skip = skipOnboardingStep.bind(null, step);
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-md flex-col gap-5">
       <OnboardingStepper current={step} />
       <Card>
         <CardHeader>
@@ -55,7 +55,7 @@ export default async function OnboardingPage({ searchParams }: PageProps<'/onboa
           ) : null}
         </CardContent>
       </Card>
-      <p className="text-muted-foreground text-center text-xs">
+      <p className="text-muted-foreground text-center text-[15px]">
         You can change all of this later on your profile page.
       </p>
     </div>

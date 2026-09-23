@@ -13,7 +13,7 @@ export function FormMessage({ error, message }: FormMessageProps) {
     <p
       role="alert"
       className={cn(
-        'rounded-lg px-3 py-2 text-sm',
+        'rounded-sm px-3 py-2 text-[15px]',
         error ? 'bg-destructive/10 text-destructive' : 'bg-muted text-foreground',
       )}
     >

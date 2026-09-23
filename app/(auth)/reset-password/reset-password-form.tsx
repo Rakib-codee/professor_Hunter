@@ -14,8 +14,10 @@ export function ResetPasswordForm() {
   return (
     <form action={action} className="flex flex-col gap-4" noValidate>
       <div>
-        <h1 className="text-xl font-semibold">Choose a new password</h1>
-        <p className="text-muted-foreground text-sm">At least {PASSWORD_MIN_LENGTH} characters.</p>
+        <h1 className="text-[22px] leading-tight font-semibold">Choose a new password</h1>
+        <p className="text-muted-foreground text-[15px]">
+          At least {PASSWORD_MIN_LENGTH} characters.
+        </p>
       </div>
       <FormMessage error={state.error} />
       <FormField

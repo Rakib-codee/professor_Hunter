@@ -23,8 +23,8 @@ export function LoginForm({ next, initialError, turnstileSiteKey }: LoginFormPro
     // key: remount after each submit so echoed defaultValues apply and the CAPTCHA resets.
     <form key={state.attempt} action={action} className="flex flex-col gap-4" noValidate>
       <div>
-        <h1 className="text-xl font-semibold">Log in</h1>
-        <p className="text-muted-foreground text-sm">Welcome back.</p>
+        <h1 className="text-[22px] leading-tight font-semibold">Log in</h1>
+        <p className="text-muted-foreground text-[15px]">Welcome back.</p>
       </div>
       <FormMessage error={error} />
       <input type="hidden" name="next" value={next} />
@@ -47,7 +47,7 @@ export function LoginForm({ next, initialError, turnstileSiteKey }: LoginFormPro
       />
       <CaptchaField siteKey={turnstileSiteKey} resetKey={state.attempt} />
       <SubmitButton pendingText="Logging in…">Log in</SubmitButton>
-      <div className="text-muted-foreground flex flex-col gap-1 text-sm">
+      <div className="text-muted-foreground flex flex-col gap-1 text-[15px]">
         <Link href="/forgot-password" className="text-primary hover:underline">
           Forgot your password?
         </Link>

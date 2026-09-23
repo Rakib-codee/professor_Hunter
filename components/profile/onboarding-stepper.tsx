@@ -8,28 +8,32 @@ interface OnboardingStepperProps {
 
 export function OnboardingStepper({ current }: OnboardingStepperProps) {
   return (
-    <ol className="flex items-center gap-2 text-xs" aria-label="Onboarding progress">
+    // Three segments (DESIGN.md §3): Cobalt for done and current, Rule for to-do.
+    <ol className="grid grid-cols-3 gap-2 text-[13px]" aria-label="Onboarding progress">
       {STEPS.map((label, index) => {
         const step = index + 1;
         const state = step < current ? 'done' : step === current ? 'current' : 'todo';
         return (
           <li
             key={label}
-            className="flex items-center gap-2"
+            className="flex flex-col gap-1.5"
             aria-current={state === 'current' ? 'step' : undefined}
           >
             <span
               className={cn(
-                'flex size-5 items-center justify-center rounded-full border text-[10px] font-medium',
-                state === 'current' && 'bg-primary text-primary-foreground border-primary',
-                state === 'done' && 'bg-muted border-border',
-                state === 'todo' && 'text-muted-foreground border-border',
+                'block h-1.5 rounded-sm',
+                state === 'todo' ? 'bg-border' : 'bg-primary',
+              )}
+              aria-hidden="true"
+            />
+            <span
+              className={cn(
+                'tnum',
+                state === 'current' ? 'text-primary font-semibold' : 'text-muted-foreground',
               )}
             >
-              {step}
+              {step}. {label}
             </span>
-            <span className={cn(state === 'todo' && 'text-muted-foreground')}>{label}</span>
-            {index < STEPS.length - 1 ? <span className="bg-border h-px w-4" aria-hidden /> : null}
           </li>
         );
       })}

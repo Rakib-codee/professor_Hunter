@@ -22,11 +22,11 @@ export function TextareaField({ name, label, hint, error, ...props }: TextareaFi
         {...props}
       />
       {error ? (
-        <p id={errorId} className="text-destructive text-xs">
+        <p id={errorId} className="text-destructive text-[13px]">
           {error}
         </p>
       ) : hint ? (
-        <p className="text-muted-foreground text-xs">{hint}</p>
+        <p className="text-muted-foreground text-[13px]">{hint}</p>
       ) : null}
     </div>
   );

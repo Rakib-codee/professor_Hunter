@@ -35,7 +35,7 @@ export function NativeSelect({
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
         className={cn(
-          'border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive dark:bg-input/30 h-8 w-full rounded-lg border bg-transparent px-2.5 text-base outline-none focus-visible:ring-3 md:text-sm',
+          'border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive bg-background h-10 w-full rounded-sm border px-3 text-base outline-none focus-visible:ring-3',
           className,
         )}
         {...props}
@@ -48,7 +48,7 @@ export function NativeSelect({
         ))}
       </select>
       {error ? (
-        <p id={errorId} className="text-destructive text-xs">
+        <p id={errorId} className="text-destructive text-[13px]">
           {error}
         </p>
       ) : null}

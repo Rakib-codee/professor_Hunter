@@ -14,8 +14,8 @@ export default async function ResetPasswordPage() {
   if (!data?.claims) {
     return (
       <div className="flex flex-col gap-3">
-        <h1 className="text-xl font-semibold">Link expired</h1>
-        <p className="text-muted-foreground text-sm">
+        <h1 className="text-[22px] leading-tight font-semibold">Link expired</h1>
+        <p className="text-muted-foreground text-[15px]">
           This password reset link is no longer valid.{' '}
           <Link href="/forgot-password" className="text-primary hover:underline">
             Request a new one
