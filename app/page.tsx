@@ -60,34 +60,36 @@ export default async function Home() {
         </Link>
       </SiteHeader>
       <main className="flex flex-1 flex-col">
-        {/* First viewport is the tool. Desktop: headline and intro left, major picker right,
-            on the same column width as the browse page. Phones stack it. */}
-        <section className="mx-auto grid w-full max-w-5xl gap-6 px-4 pt-8 pb-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:content-start md:gap-x-12 md:gap-y-5 md:px-6 md:pt-12 md:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div className="flex flex-col gap-3 md:row-span-2">
-            <h1 className="font-display text-[40px] leading-[1.05] tracking-[-0.02em] text-balance md:text-[48px] md:leading-none xl:text-[56px]">
+        {/* First viewport (DESIGN.md §7 hierarchy): the major picker is the dominant element; the
+            headline introduces at 26/30px; the counts live inside the sentence. On phones the
+            picker follows the intro and the buttons follow the picker. Desktop rows are auto/1fr
+            so the picker's height lands in row 2 and the buttons sit right under the intro. */}
+        <section className="mx-auto grid w-full max-w-5xl gap-6 px-4 pt-6 pb-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:grid-rows-[auto_1fr] md:gap-x-12 md:gap-y-6 md:px-6 md:pt-11 md:pb-12">
+          <div className="enter flex flex-col gap-3 md:col-start-1 md:row-start-1">
+            <h1 className="font-display text-[26px] leading-[1.15] text-balance md:text-[30px]">
               Find a supervisor in China for your CSC application
             </h1>
-            {professors > 0 ? (
-              <dl className="flex gap-7" aria-label="Coverage">
-                <div>
-                  <dd className="display-figure text-[36px] md:text-[56px]">{professors}</dd>
-                  <dt className="text-muted-foreground mt-1 text-[13px] md:text-[14px]">
-                    professors
-                  </dt>
-                </div>
-                <div>
-                  <dd className="display-figure text-[36px] md:text-[56px]">{universities}</dd>
-                  <dt className="text-muted-foreground mt-1 text-[13px] md:text-[14px]">
-                    universities
-                  </dt>
-                </div>
-              </dl>
-            ) : null}
-            <p className="text-muted-foreground text-base sm:text-lg">
-              Computer Science, Software Engineering and Civil Engineering. Pick one, draft a
-              personalised email, track the reply. Free.
+            <p className="text-muted-foreground tnum text-base md:text-lg">
+              {professors > 0 ? (
+                <>
+                  <b className="text-foreground font-semibold">{professors} professors</b> at{' '}
+                  <b className="text-foreground font-semibold">{universities} universities</b> in
+                  Computer Science, Software Engineering and Civil Engineering.
+                </>
+              ) : (
+                'Professors in Computer Science, Software Engineering and Civil Engineering.'
+              )}{' '}
+              Pick one, draft a personalised email, track the reply. Free.
             </p>
-            <div className="mt-2 hidden gap-2 md:flex md:flex-wrap">
+          </div>
+          <div className="md:col-start-2 md:row-span-2 md:row-start-1">
+            <MajorPicker counts={counts} preferredField={null} enter />
+          </div>
+          <div className="enter enter-4 flex flex-col gap-4 md:col-start-1 md:row-start-2 md:self-start">
+            <p className="text-muted-foreground text-[14px] md:text-[15px]">
+              Data from public faculty pages. Every record shows when it was last checked.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               {[
                 {
                   href: userId ? '/find' : '/signup',
@@ -102,39 +104,13 @@ export default async function Home() {
                   className={buttonVariants({
                     variant: cta.variant,
                     size: 'lg',
-                    className: 'sm:min-w-56',
+                    className: 'whitespace-nowrap',
                   })}
                 >
                   {cta.label}
                 </Link>
               ))}
             </div>
-          </div>
-          <MajorPicker counts={counts} preferredField={null} />
-          <p className="text-muted-foreground text-[15px]">
-            Data from public faculty pages. Every record shows when it was last checked.
-          </p>
-          <div className="flex flex-col gap-2 sm:flex-row md:hidden">
-            {[
-              {
-                href: userId ? '/find' : '/signup',
-                label: userId ? 'Find professors' : 'Create a free account',
-                variant: undefined,
-              },
-              { href: '/find', label: 'Browse without an account', variant: 'outline' as const },
-            ].map((cta) => (
-              <Link
-                key={cta.label}
-                href={cta.href}
-                className={buttonVariants({
-                  variant: cta.variant,
-                  size: 'lg',
-                  className: 'sm:min-w-56',
-                })}
-              >
-                {cta.label}
-              </Link>
-            ))}
           </div>
         </section>
 
