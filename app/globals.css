@@ -7,11 +7,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* next/font sets --font-source-sans on <html>; never reference --font-sans from itself (cycle = no font).
-     DESIGN.md §2: Source Sans 3 for Latin; Chinese names use .font-cjk (system CJK, no download). */
-  --font-sans: var(--font-source-sans), 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
+  /* next/font sets --font-plex on <html>; never reference --font-sans from itself (cycle = no font).
+     DESIGN.md §7 direction B: IBM Plex Sans for everything Latin; Chinese names use the CJK stack. */
+  --font-sans: var(--font-plex), 'IBM Plex Sans', 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-heading: var(--font-source-sans), 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-heading:
+    var(--font-plex), 'IBM Plex Sans', 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
   --font-cjk:
     'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Noto Sans SC', 'Microsoft YaHei',
     sans-serif;
@@ -63,10 +64,9 @@
 
 /* DESIGN.md §1. Ink #1C2331, Paper #FFFFFF, Ledger #F5F6F8, Rule #D5D9E0, Slate #5A6472, Cobalt #2E4A8B. */
 :root {
-  /* Display faces (DESIGN.md §7) as plain custom properties: a @theme entry shadowed by a custom
-     @utility of the same name emits no variable. next/font sets --font-archivo* on <html>. */
-  --font-display: var(--font-archivo), 'Arial Narrow', Arial, sans-serif;
-  --font-display-wide: var(--font-archivo-expanded), 'Arial Black', Arial, sans-serif;
+  /* Display is the same family at 700 (DESIGN.md §7 direction B); figures use tabular numerals. */
+  --font-display: var(--font-plex), 'IBM Plex Sans', Arial, sans-serif;
+  --font-display-wide: var(--font-plex), 'IBM Plex Sans', Arial, sans-serif;
   --background: #ffffff;
   --foreground: #1c2331;
   --card: #ffffff;
@@ -173,6 +173,83 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+/* Motion (DESIGN.md §9): state changes only, 150–250ms ease-out, transform/opacity only.
+   Reduced motion collapses every animation to an instant change (base layer rule above). */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@utility enter {
+  animation: rise 200ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+@utility enter-fade {
+  animation: fade 180ms ease-out both;
+}
+@utility enter-1 {
+  animation-delay: 60ms;
+}
+@utility enter-2 {
+  animation-delay: 120ms;
+}
+@utility enter-3 {
+  animation-delay: 180ms;
+}
+@utility enter-4 {
+  animation-delay: 260ms;
+}
+/* Ledger rows after a filter change: the first eight rows rise in sequence, the rest are static. */
+@utility ledger-enter {
+  & > * {
+    animation: rise 200ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+  & > :nth-child(2) {
+    animation-delay: 30ms;
+  }
+  & > :nth-child(3) {
+    animation-delay: 60ms;
+  }
+  & > :nth-child(4) {
+    animation-delay: 90ms;
+  }
+  & > :nth-child(5) {
+    animation-delay: 120ms;
+  }
+  & > :nth-child(6) {
+    animation-delay: 150ms;
+  }
+  & > :nth-child(7) {
+    animation-delay: 180ms;
+  }
+  & > :nth-child(8) {
+    animation-delay: 210ms;
+  }
+  & > :nth-child(n + 9) {
+    animation: none;
+  }
+}
+@keyframes pulse-soft {
+  50% {
+    opacity: 0.55;
+  }
+}
+@utility busy-pulse {
+  animation: pulse-soft 1.2s ease-in-out infinite;
 }
 
 @utility font-cjk {

@@ -1,34 +1,17 @@
 import type { Metadata, Viewport } from 'next';
-import { Source_Sans_3 } from 'next/font/google';
-import localFont from 'next/font/local';
+import { IBM_Plex_Sans } from 'next/font/google';
 import Script from 'next/script';
 import { Footer } from '@/components/layout/footer';
 import { getPublicEnv } from '@/lib/env';
 import './globals.css';
 
-// DESIGN.md §7: Source Sans 3 for text (companion of Source Han Sans / Noto Sans CJK), Archivo 700
-// for display in two widths. Latin subsets only; Archivo self-hosted as two 14 KB static files.
-const sourceSans = Source_Sans_3({
-  variable: '--font-source-sans',
+// DESIGN.md §7 (direction B): one engineered family, IBM Plex Sans, 400 for text, 600 for
+// controls and emphasis, 700 for display. Latin subset only, ~53 KB, metric-matched fallback.
+const plex = IBM_Plex_Sans({
+  variable: '--font-plex',
   subsets: ['latin'],
-  weight: ['400', '600'],
+  weight: ['400', '600', '700'],
   display: 'swap',
-});
-
-const archivo = localFont({
-  src: './fonts/archivo-700-latin.woff2',
-  weight: '700',
-  variable: '--font-archivo',
-  display: 'swap',
-  adjustFontFallback: 'Arial',
-});
-
-const archivoExpanded = localFont({
-  src: './fonts/archivo-expanded-700-latin.woff2',
-  weight: '700',
-  variable: '--font-archivo-expanded',
-  display: 'swap',
-  adjustFontFallback: 'Arial',
 });
 
 export const metadata: Metadata = {
@@ -49,10 +32,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   const { NEXT_PUBLIC_UMAMI_SCRIPT_URL, NEXT_PUBLIC_UMAMI_WEBSITE_ID } = getPublicEnv();
   return (
-    <html
-      lang="en"
-      className={`${sourceSans.variable} ${archivo.variable} ${archivoExpanded.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${plex.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         {children}
         <Footer />
