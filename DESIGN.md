@@ -170,3 +170,64 @@ Also removed while reviewing: middle-dot joins in every meta string (they hide w
 ## 6. Out of scope for this pass
 
 Dark mode (tokens exist but nothing enables them; this pass stays light-only), new copy, new routes, new data fields, and any change to what the badges mean.
+
+## 7. Typography, revised (proposal, not yet implemented)
+
+Pass 2 shipped one family (Source Sans 3) and let layout carry hierarchy. That keeps the page calm but gives it no voice, and with no images and a deliberately flat palette, type is the only element left that can. This section replaces §2's single-family plan with two families in clearly different roles. The three constraints hold: Latin sits beside system CJK on every record (so no serif), the webfont budget stays at 40–60 KB Latin-only, and body text stays highly legible on cheap Android screens for non-native readers.
+
+### 7.1 The faces, and why not the obvious ones
+
+**Display: Archivo, weight 700, in two widths (normal and Expanded).** A grotesque descended from late-19th-century American job-printing type by way of Omnibus-Type's Chivo: squarish bowls, flat horizontal terminals, a tall x-height and tight apertures. At 24 px and above it has a physical, set-in-metal presence that neutral neo-grotesques deliberately avoid. Two properties make it right for this product rather than merely distinctive:
+
+- Its width axis is a second voice inside one family. **Archivo Expanded** at the same weight sets the large numerals (738 professors, the picker counts) as wide, planted figures, which is how registry ledgers and stamped records present a count. No second display family is needed.
+- Its x-height (about 0.55 em) is close to the visual mass of a CJK ideograph at the same size, so `Chen Jun 陈军` reads as one line, not a bold Latin word with a lighter Chinese afterthought. Low-x-height grotesques (Helvetica-likes) make the ideographs look oversized next to them.
+
+**Text: Source Sans 3, weights 400 and 600, unchanged.** Kept precisely because of the CJK constraint: it is the Latin companion of Source Han Sans, the design Android ships as Noto Sans CJK and that PingFang closely matches. Body lines mixing English and a Chinese name are set in matched designs. It is also one of the most legible humanist faces at 16 px on low-density screens: open apertures, clear a/g/l/1 distinctions, generous spacing.
+
+Why not the defaults:
+
+- _Inter, Geist, system-ui:_ neutral by design; they are the house style of every dashboard built since 2020, which is exactly the "generic SaaS" read the brief rejects. Their low-contrast, wide-set letterforms also spend horizontal space the 375 px headline does not have.
+- _Helvetica / Arial:_ small x-height beside CJK, and the "no character" problem twice over.
+- _Schibsted Grotesk, Instrument Sans, Familjen Grotesk_ (the closest alternatives): measured Latin subsets at 700 are 25, 17 and 12 KB. Each is a fine display face, but none has a width axis, so the big counts would need either a third file or fake width. Archivo gives both voices for 28 KB.
+
+Budget, measured from Google Fonts' Latin-subset woff2 files: Source Sans 3 400 (15 KB) + 600 (15 KB) + Archivo 700 (14 KB) + Archivo Expanded 700 (14 KB) = **58 KB**. Loaded through next/font with metric-matched fallbacks, so nothing shifts while they arrive. Archivo is never loaded below 700 and never used below 20 px, so one weight is enough.
+
+### 7.2 Scale
+
+Two columns of sizes: 375 px / 1440 px. Line-height as a ratio. Tracking only where noted.
+
+| Role                   | Face and weight      | 375 px    | 1440 px   | Notes                                                                    |
+| ---------------------- | -------------------- | --------- | --------- | ------------------------------------------------------------------------ |
+| Landing headline       | Archivo 700          | 40 / 1.05 | 64 / 1.0  | letter-spacing −0.02 em; `text-wrap: balance`                            |
+| Hero figures (738, 34) | Archivo Expanded 700 | 36 / 1.0  | 56 / 1.0  | tabular; label under in Meta                                             |
+| Page title             | Archivo 700          | 28 / 1.1  | 36 / 1.1  | e.g. `Civil Engineering`, `My tracker`                                   |
+| Major picker row       | Archivo 700          | 24 / 1.15 | 32 / 1.1  | count in Archivo Expanded 700, 22 / 28, Ink                              |
+| Professor name, page   | Archivo 700          | 30 / 1.1  | 40 / 1.05 | `name_cn` follows at 0.9× in the CJK stack, 400, Slate                   |
+| Professor name, list   | Archivo 700          | 20 / 1.2  | 22 / 1.2  | `name_cn` at 0.9×, 400, Slate                                            |
+| Section heading        | Archivo 700          | 20 / 1.2  | 24 / 1.2  | `Research area`, `Send it`, `Follow-ups due`                             |
+| Body                   | Source Sans 3 400    | 16 / 1.5  | 16 / 1.5  | legal pages 17 / 1.55 at 1440                                            |
+| Body strong            | Source Sans 3 600    | 16 / 1.5  | 16 / 1.5  | labels, university name in a record                                      |
+| Controls               | Source Sans 3 600    | 15 / 1    | 16 / 1    | buttons, nav, form labels, tabs                                          |
+| Meta                   | Source Sans 3 400    | 13 / 1.4  | 14 / 1.4  | dates, email type, counts in sentences, footnotes; tabular where numeric |
+| Chip                   | Source Sans 3 400    | 13 / 1    | 14 / 1    | tag chips, filters in effect                                             |
+
+Nothing else exists. Two display sizes per screen at most (one title, one row or name size), so the display face reads as structure, not decoration.
+
+### 7.3 Display type as an active element
+
+Three places carry the design; everywhere else the display face is absent.
+
+1. **The major picker** is the landing page's hero and the `/find` page in full. Each row becomes a single Archivo line at 24 / 32 px with its count set in Archivo Expanded at 22 / 28 px, in Ink, right-aligned on the same baseline, tabular. The row height grows to 72 px on phones and 88 px on desktop. Three rows fill the first viewport on a phone with nothing else needed. The count is not decoration: it is the one fact a student wants before tapping.
+2. **Professor names** are the only bold thing in a record. Archivo 700 at 20 px in the ledger, 30 px on the record sheet, with the Chinese name at 0.9× in the system CJK stack, regular weight, Slate. The rest of the record stays Source Sans. Scanning a list of forty records becomes scanning forty names, which is how people actually browse a faculty page.
+3. **The big counts** on the landing page: `738` and `34` set in Archivo Expanded at 36 / 56 px with `professors` and `universities` as Meta labels beneath, replacing the number-in-a-sentence. The tracker summary (`7 sent, 1 waiting…`) and the admin stat tiles use the same figure style at 28 px. Numbers are the product's proof of seriousness; setting them large and wide says so without a single adjective.
+
+### 7.4 How Archivo sits beside the CJK stack
+
+- **Size.** Ideographs are drawn to fill the em; Latin capitals reach about 0.7 em. At equal size a Chinese name looks larger and heavier than the Latin one beside it. Body text keeps §2's rule (CJK one step up, 1.0625×) because Source Sans is small on the body. Display names invert it: the Chinese name is set at 0.9× of the Archivo size, so `Chen Jun` at 20 px pairs with `陈军` at 18 px, and their visual heights match.
+- **Weight.** Archivo 700 against CJK regular (400) is deliberate. Android phones ship Noto Sans CJK in Regular only (Bold arrives in newer builds and iOS has Medium/Semibold), so a bold CJK request would render inconsistently across devices. The regular Chinese name in Slate next to the bold Ink Latin name reads as a consistent secondary, on every device, rather than as a random weight change.
+- **Baseline and gap.** Both names sit on one baseline (`align-items: baseline`) with a 0.4 em gap; the CJK span carries `lang="zh-Hans"` so the browser picks Simplified forms and the right system font.
+- **x-height.** Archivo's tall x-height means the lowercase in `Chen Jun` carries mass at the same optical level as the ideographs' central strokes; with a low-x-height display face the Latin would look like a caption to the Chinese.
+
+### 7.5 Where restraint applies
+
+Body copy, forms, alerts, the draft editor, the tracker rows below the name, legal pages, the footer, admin tables and every button stay in Source Sans 3 exactly as shipped. Archivo never appears in a control, never below 20 px, never in a running sentence, and never in more than two sizes on one screen. Emphasis inside body text is Source Sans 600, not the display face. If a screen has no title and no name, it has no Archivo at all: login, signup, password reset and the legal pages keep their quiet 22 px Source Sans headings.
