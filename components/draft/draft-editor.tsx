@@ -115,14 +115,14 @@ export function DraftEditor({
 
   if (phase === 'sent') {
     return (
-      <div className="flex flex-col gap-3 rounded-xl border p-4" role="status">
+      <div className="border-border flex flex-col gap-3 rounded-sm border p-4" role="status">
         <p className="font-medium">
           Marked as sent. Follow-up reminder set for 10 days from today.
         </p>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-base">
           Track the reply and add notes in your tracker.
         </p>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Link href="/tracker" className={buttonVariants()}>
             Open tracker
           </Link>
@@ -140,24 +140,26 @@ export function DraftEditor({
 
   return (
     <div className="flex flex-col gap-5">
-      <section className="flex flex-col gap-3 rounded-xl border p-4">
+      <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <fieldset className="flex gap-1" aria-label="Tone">
+          <fieldset
+            className="border-input inline-flex overflow-hidden rounded-sm border"
+            aria-label="Tone"
+          >
             {(['formal', 'concise'] as const).map((option) => (
-              <Button
+              <button
                 key={option}
                 type="button"
-                size="sm"
-                variant={tone === option ? 'default' : 'outline'}
                 aria-pressed={tone === option}
                 onClick={() => onToneChange(option)}
                 disabled={phase === 'generating'}
+                className="aria-pressed:bg-primary aria-pressed:text-primary-foreground hover:bg-muted aria-pressed:hover:bg-primary h-10 px-4 text-[15px] font-medium transition-colors disabled:opacity-50"
               >
                 {option === 'formal' ? 'Formal' : 'Concise'}
-              </Button>
+              </button>
             ))}
           </fieldset>
-          <p className="text-muted-foreground text-xs" aria-live="polite">
+          <p className="text-muted-foreground tnum text-[13px]" aria-live="polite">
             {quota.used} of {quota.quota} drafts today
           </p>
         </div>
@@ -174,6 +176,8 @@ export function DraftEditor({
         {phase === 'idle' || phase === 'generating' ? (
           <Button
             type="button"
+            size="lg"
+            className="sm:self-start"
             onClick={() => void generate(tone)}
             disabled={phase === 'generating' || quotaLeft <= 0}
           >
@@ -211,7 +215,7 @@ export function DraftEditor({
           </Button>
         )}
         {error ? (
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-destructive text-[15px]">
             {error}
           </p>
         ) : null}
@@ -219,11 +223,18 @@ export function DraftEditor({
 
       {phase === 'editing' ? (
         <section className="flex flex-col gap-4">
-          {warnings.map((warning) => (
-            <p key={warning} role="alert" className="bg-muted rounded-lg px-3 py-2 text-sm">
-              {WARNING_COPY[warning] ?? 'Check the draft carefully before sending.'}
-            </p>
-          ))}
+          {warnings.length > 0 ? (
+            <div
+              role="alert"
+              className="border-muted-foreground flex flex-col gap-1 rounded-sm border px-3 py-2 text-[15px]"
+            >
+              {warnings.map((warning) => (
+                <p key={warning}>
+                  {WARNING_COPY[warning] ?? 'Check the draft carefully before sending.'}
+                </p>
+              ))}
+            </div>
+          ) : null}
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="draft-subject">Subject</Label>
             <Input
@@ -231,6 +242,7 @@ export function DraftEditor({
               value={subject}
               onChange={(event) => setSubject(event.target.value)}
               maxLength={200}
+              className="bg-muted"
             />
           </div>
           <TextareaField
@@ -239,21 +251,21 @@ export function DraftEditor({
             rows={14}
             value={body}
             onChange={(event) => setBody(event.target.value)}
-            className="font-mono text-sm"
+            className="text-base leading-relaxed"
           />
-          <p className="text-muted-foreground text-xs">
+          <p className="text-muted-foreground text-[13px]">
             Edit before sending — professors recognise template emails.
           </p>
 
-          <div className="flex flex-col gap-3 rounded-xl border p-4">
-            <h2 className="text-sm font-medium">Send it</h2>
+          <div className="border-border flex flex-col gap-3 rounded-sm border p-4">
+            <h2 className="text-[15px] font-semibold">Send it</h2>
             <EmailReveal
               professorId={professorId}
               hasEmail={hasEmail}
               isSignedIn
               onReveal={setEmail}
             />
-            <div className="flex flex-wrap gap-2">
+            <div className="grid gap-2 sm:flex sm:flex-wrap">
               <Button type="button" variant="outline" onClick={() => void copy()}>
                 {copied ? <CheckIcon /> : <CopyIcon />} {copied ? 'Copied' : 'Copy subject + body'}
               </Button>

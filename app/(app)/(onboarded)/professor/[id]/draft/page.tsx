@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
+import { ChevronLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { DraftEditor } from '@/components/draft/draft-editor';
+import { ProfessorName } from '@/components/professor/professor-name';
+import { RecordStrip } from '@/components/professor/record-strip';
 import { COMPLETENESS_THRESHOLD, FREE_TIER_LIMITS } from '@/lib/constants';
 import { getProfessor } from '@/lib/data/professors';
 import { getCurrentStudent } from '@/lib/data/students';
@@ -40,40 +43,57 @@ export default async function DraftPage({ params }: PageProps<'/professor/[id]/d
   const used = await draftsUsedToday(student.id);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-      <Link href={`/professor/${id}`} className="text-muted-foreground text-sm hover:underline">
-        ← {displayName(professor.name_en, professor.name_cn)}
-      </Link>
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Draft your email</h1>
-        <p className="text-muted-foreground text-sm">
-          A first-contact email asking {professor.name_en} for a CSC acceptance letter, built from
-          your profile.
-        </p>
-      </div>
+    <div className="mx-auto grid w-full max-w-5xl gap-6 md:grid-cols-[280px_1fr] md:gap-10">
+      {/* The record beside the writing (DESIGN.md §3): compact on phones, a column on desktop. */}
+      <aside className="bg-muted flex flex-col gap-3 rounded-sm p-4 md:self-start">
+        <Link
+          href={`/professor/${id}`}
+          className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 self-start text-[15px]"
+          aria-label={`Back to ${displayName(professor.name_en, professor.name_cn)}`}
+        >
+          <ChevronLeftIcon className="size-4" aria-hidden="true" />
+          <ProfessorName nameEn={professor.name_en} nameCn={professor.name_cn} />
+        </Link>
+        <RecordStrip professor={professor} />
+        {professor.research_area ? (
+          <p className="hidden text-[15px] md:block">{professor.research_area}</p>
+        ) : null}
+      </aside>
 
-      {!isDraftEnabled ? (
-        <p className="rounded-xl border p-4 text-sm">
-          Draft generation is coming in a few days. You can still reveal the email and write your
-          own.
-        </p>
-      ) : !completeness.isReady ? (
-        <p className="rounded-xl border p-4 text-sm">
-          Your profile is {completeness.score}% complete. Reach {COMPLETENESS_THRESHOLD}% to unlock
-          drafts:{' '}
-          <Link href="/profile" className="text-primary hover:underline">
-            edit profile
-          </Link>
-          . Missing: {completeness.missing.join(', ')}.
-        </p>
-      ) : (
-        <DraftEditor
-          professorId={professor.id}
-          professorName={professor.name_en}
-          hasEmail={professor.has_email}
-          initialQuota={{ used, quota: FREE_TIER_LIMITS.drafts }}
-        />
-      )}
+      <div className="flex min-w-0 flex-col gap-4">
+        <div>
+          <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
+            Draft your email
+          </h1>
+          <p className="text-muted-foreground mt-1 text-base">
+            A first-contact email asking {professor.name_en} for a CSC acceptance letter, built from
+            your profile.
+          </p>
+        </div>
+
+        {!isDraftEnabled ? (
+          <p className="border-border rounded-sm border p-4 text-base">
+            Draft generation is coming in a few days. You can still reveal the email and write your
+            own.
+          </p>
+        ) : !completeness.isReady ? (
+          <p className="border-border rounded-sm border p-4 text-base">
+            Your profile is {completeness.score}% complete. Reach {COMPLETENESS_THRESHOLD}% to
+            unlock drafts:{' '}
+            <Link href="/profile" className="text-primary hover:underline">
+              edit profile
+            </Link>
+            . Missing: {completeness.missing.join(', ')}.
+          </p>
+        ) : (
+          <DraftEditor
+            professorId={professor.id}
+            professorName={professor.name_en}
+            hasEmail={professor.has_email}
+            initialQuota={{ used, quota: FREE_TIER_LIMITS.drafts }}
+          />
+        )}
+      </div>
     </div>
   );
 }
