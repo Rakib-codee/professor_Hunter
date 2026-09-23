@@ -9,16 +9,16 @@ export default async function AdminReportsPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Open reports</h1>
-        <p className="text-muted-foreground text-sm">
+        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Open reports</h1>
+        <p className="text-muted-foreground text-[15px]">
           {reports.length} open. Set the professor status here; edit other fields in Supabase
           Studio.
         </p>
       </div>
       {reports.length === 0 ? (
-        <p className="text-muted-foreground text-sm">Queue is empty.</p>
+        <p className="text-muted-foreground text-[15px]">Queue is empty.</p>
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="ledger border-border border-y">
           {reports.map((report) => (
             <ReportCard key={report.id} report={report} />
           ))}

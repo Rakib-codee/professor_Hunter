@@ -19,7 +19,7 @@ export function CvSection({ downloadUrl }: CvSectionProps) {
   return (
     <div className="flex flex-col gap-3">
       {downloadUrl ? (
-        <div className="flex flex-wrap items-center gap-2 text-sm">
+        <div className="flex flex-wrap items-center gap-2 text-[15px]">
           <a
             href={downloadUrl}
             target="_blank"
@@ -35,7 +35,7 @@ export function CvSection({ downloadUrl }: CvSectionProps) {
           </form>
         </div>
       ) : (
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-[15px]">
           No CV uploaded. Optional: not used by drafts yet.
         </p>
       )}
@@ -54,7 +54,7 @@ export function CvSection({ downloadUrl }: CvSectionProps) {
           type="file"
           accept="application/pdf,.pdf"
           required
-          className="text-sm"
+          className="text-[15px]"
         />
         <FormMessage error={state.error} message={state.message} />
         <div>

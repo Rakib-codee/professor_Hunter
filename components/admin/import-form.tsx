@@ -29,14 +29,17 @@ export function ImportForm() {
             type="file"
             accept=".csv,text/csv"
             required
-            className="text-sm"
+            className="text-[15px]"
           />
         </div>
         <FormMessage error={state.error} />
         <SubmitButton pendingText="Importing… this can take a few minutes">Import</SubmitButton>
       </form>
       {summary ? (
-        <section className="flex flex-col gap-2 rounded-xl border p-4 text-sm" aria-live="polite">
+        <section
+          className="flex flex-col gap-2 rounded-sm border p-4 text-[15px]"
+          aria-live="polite"
+        >
           <h2 className="font-medium">Import finished</h2>
           <dl className="grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-5">
             {(
@@ -49,7 +52,7 @@ export function ImportForm() {
               ] as const
             ).map(([label, value]) => (
               <div key={label}>
-                <dt className="text-muted-foreground text-xs">{label}</dt>
+                <dt className="text-muted-foreground text-[13px]">{label}</dt>
                 <dd className="tabular-nums">{value}</dd>
               </div>
             ))}

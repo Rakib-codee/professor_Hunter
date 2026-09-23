@@ -12,7 +12,7 @@ export default async function AdminPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Stats</h1>
+      <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Stats</h1>
       <div className="grid gap-3 sm:grid-cols-4">
         <Card size="sm">
           <CardHeader>
@@ -43,13 +43,13 @@ export default async function AdminPage() {
       </div>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-medium">Outreach by status</h2>
+        <h2 className="text-[20px] leading-tight font-semibold">Outreach by status</h2>
         {outreachTotal === 0 ? (
-          <p className="text-muted-foreground text-sm">No emails tracked yet.</p>
+          <p className="text-muted-foreground text-[15px]">No emails tracked yet.</p>
         ) : (
-          <ul className="grid gap-1 text-sm sm:grid-cols-2">
+          <ul className="ledger border-border tnum border-y sm:grid sm:grid-cols-2 sm:gap-x-8">
             {Object.entries(stats.outreachByStatus).map(([status, count]) => (
-              <li key={status} className="flex justify-between rounded-lg border px-3 py-1.5">
+              <li key={status} className="flex justify-between py-2">
                 <span>{statusLabel(status as OutreachStatus)}</span>
                 <span className="tabular-nums">{count}</span>
               </li>
@@ -59,16 +59,16 @@ export default async function AdminPage() {
       </section>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-medium">Reply rate by university</h2>
-        <p className="text-muted-foreground text-xs">
+        <h2 className="text-[20px] leading-tight font-semibold">Reply rate by university</h2>
+        <p className="text-muted-foreground text-[13px]">
           Shown once a university has 5 or more tracked emails.
         </p>
         {stats.replyRateByUniversity.length === 0 ? (
-          <p className="text-muted-foreground text-sm">Not enough data yet.</p>
+          <p className="text-muted-foreground text-[15px]">Not enough data yet.</p>
         ) : (
-          <ul className="flex flex-col gap-1 text-sm">
+          <ul className="ledger border-border tnum border-y">
             {stats.replyRateByUniversity.map((row) => (
-              <li key={row.name} className="flex justify-between rounded-lg border px-3 py-1.5">
+              <li key={row.name} className="flex justify-between gap-4 py-2">
                 <span>{row.name}</span>
                 <span className="tabular-nums">
                   {row.replied}/{row.sent} ({Math.round((row.replied / row.sent) * 100)}%)

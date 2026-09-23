@@ -55,15 +55,17 @@ export function ResearchForm({ student, flow }: ResearchFormProps) {
         error={state.fieldErrors?.research_interests}
       />
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1.5 text-sm font-medium">Research tags (pick 1–{TAGS_MAX})</legend>
+        <legend className="mb-1.5 text-[15px] font-medium">
+          Research tags (pick 1–{TAGS_MAX})
+        </legend>
         {tags.length === 0 ? (
-          <p className="text-muted-foreground text-xs">Choose a field to see its tags.</p>
+          <p className="text-muted-foreground text-[13px]">Choose a field to see its tags.</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <label
                 key={tag}
-                className="has-checked:bg-primary has-checked:text-primary-foreground has-checked:border-primary border-border cursor-pointer rounded-full border px-3 py-1 text-sm select-none"
+                className="has-checked:bg-primary has-checked:text-primary-foreground has-checked:border-primary border-border cursor-pointer rounded-full border px-3 py-1 text-[15px] select-none"
               >
                 <input
                   type="checkbox"
@@ -78,7 +80,7 @@ export function ResearchForm({ student, flow }: ResearchFormProps) {
           </div>
         )}
         {state.fieldErrors?.research_tags ? (
-          <p className="text-destructive text-xs">{state.fieldErrors.research_tags}</p>
+          <p className="text-destructive text-[13px]">{state.fieldErrors.research_tags}</p>
         ) : null}
       </fieldset>
       <SubmitButton pendingText="Saving…">{flow === 'onboarding' ? 'Finish' : 'Save'}</SubmitButton>

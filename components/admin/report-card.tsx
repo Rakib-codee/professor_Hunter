@@ -28,45 +28,44 @@ export function ReportCard({ report }: { report: ReportItem }) {
     });
 
   return (
-    <li className="flex flex-col gap-2 rounded-xl border p-3">
+    <li className="flex flex-col gap-2 py-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <span className="font-medium">{REPORT_TYPE_LABEL[report.type] ?? report.type}</span>
-        <span className="text-muted-foreground text-xs">
-          {new Date(report.created_at).toISOString().slice(0, 10)}
-          {report.reporter_name ? ` · by ${report.reporter_name}` : ''}
+        <span className="text-muted-foreground tnum flex gap-x-3 text-[13px]">
+          <span>{new Date(report.created_at).toISOString().slice(0, 10)}</span>
+          {report.reporter_name ? <span>by {report.reporter_name}</span> : null}
         </span>
       </div>
       {report.professor ? (
-        <p className="text-sm">
+        <p className="text-[15px]">
           <Link href={`/professor/${report.professor.id}`} className="hover:underline">
             {report.professor.name_en}
           </Link>{' '}
           <Link
             href={`/admin/professors/${report.professor.id}`}
-            className="text-primary text-xs hover:underline"
+            className="text-primary text-[13px] hover:underline"
           >
             edit
           </Link>
-          {report.professor.university_name ? ` · ${report.professor.university_name}` : ''}
-          {' · '}
-          <span className="text-muted-foreground">
+          <span className="text-muted-foreground block">
+            {report.professor.university_name ? `${report.professor.university_name}, ` : ''}
             {report.professor.has_email ? 'has email' : 'no email'}
           </span>
         </p>
       ) : (
-        <p className="text-muted-foreground text-sm">Professor no longer exists.</p>
+        <p className="text-muted-foreground text-[15px]">Professor no longer exists.</p>
       )}
       {report.message ? (
-        <p className="bg-muted rounded-lg px-3 py-2 text-sm whitespace-pre-wrap">
+        <p className="bg-muted rounded-sm px-3 py-2 text-[15px] whitespace-pre-wrap">
           {report.message}
         </p>
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
         {report.professor ? (
-          <label className="flex items-center gap-2 text-xs">
+          <label className="flex items-center gap-2 text-[13px] font-medium">
             Professor status
             <select
-              className="border-input dark:bg-input/30 h-8 rounded-lg border bg-transparent px-2 text-sm"
+              className="border-input bg-background h-10 rounded-sm border px-2 text-[15px]"
               defaultValue={report.professor.status ?? 'active'}
               disabled={pending}
               onChange={(event) =>
@@ -96,7 +95,7 @@ export function ReportCard({ report }: { report: ReportItem }) {
         </Button>
       </div>
       {error ? (
-        <p role="alert" className="text-destructive text-xs">
+        <p role="alert" className="text-destructive text-[13px]">
           {error}
         </p>
       ) : null}

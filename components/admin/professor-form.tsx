@@ -84,12 +84,12 @@ export function ProfessorForm({ professor }: { professor: ProfessorAdminRow }) {
         error={state.fieldErrors?.research_area}
       />
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1.5 text-sm font-medium">Research tags</legend>
+        <legend className="mb-1.5 text-[15px] font-medium">Research tags</legend>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <label
               key={tag}
-              className="has-checked:bg-primary has-checked:text-primary-foreground has-checked:border-primary border-border cursor-pointer rounded-full border px-3 py-1 text-sm select-none"
+              className="has-checked:bg-primary has-checked:text-primary-foreground has-checked:border-primary border-border cursor-pointer rounded-full border px-3 py-1 text-[15px] select-none"
             >
               <input
                 type="checkbox"
@@ -103,7 +103,7 @@ export function ProfessorForm({ professor }: { professor: ProfessorAdminRow }) {
           ))}
         </div>
         {state.fieldErrors?.research_tags ? (
-          <p className="text-destructive text-xs">{state.fieldErrors.research_tags}</p>
+          <p className="text-destructive text-[13px]">{state.fieldErrors.research_tags}</p>
         ) : null}
       </fieldset>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -148,7 +148,7 @@ export function ProfessorForm({ professor }: { professor: ProfessorAdminRow }) {
         defaultValue={value('notes')}
         error={state.fieldErrors?.notes}
       />
-      <p className="text-muted-foreground text-xs">
+      <p className="text-muted-foreground text-[13px]">
         Email type ({professor.email_type}) and the sortable verification date are recalculated on
         save. University changes go through Supabase Studio.
       </p>

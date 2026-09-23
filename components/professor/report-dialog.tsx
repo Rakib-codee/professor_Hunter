@@ -60,7 +60,7 @@ export function ReportDialog({ professorId, isSignedIn }: ReportDialogProps) {
           <DialogDescription>Helps us keep the list accurate for everyone.</DialogDescription>
         </DialogHeader>
         {done ? (
-          <p className="text-sm">Thanks. We will check this professor’s details.</p>
+          <p className="text-[15px]">Thanks. We will check this professor’s details.</p>
         ) : (
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
             <NativeSelect
@@ -72,7 +72,7 @@ export function ReportDialog({ professorId, isSignedIn }: ReportDialogProps) {
             />
             <TextareaField name="message" label="Details (optional)" rows={3} maxLength={500} />
             {error ? (
-              <p role="alert" className="text-destructive text-xs">
+              <p role="alert" className="text-destructive text-[13px]">
                 {error}
               </p>
             ) : null}

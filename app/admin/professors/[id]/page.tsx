@@ -18,10 +18,15 @@ export default async function AdminProfessorEditPage({
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{professor.name_en}</h1>
-        <p className="text-muted-foreground text-sm">
-          {professor.university_name ?? 'Unknown university'} ·{' '}
-          <Link href={`/professor/${professor.id}`} className="hover:underline">
+        <h1 className="text-[26px] leading-tight font-semibold tracking-tight">
+          {professor.name_en}
+        </h1>
+        <p className="text-muted-foreground text-[15px]">
+          {professor.university_name ?? 'Unknown university'}{' '}
+          <Link
+            href={`/professor/${professor.id}`}
+            className="text-primary ml-2 underline underline-offset-4"
+          >
             public page
           </Link>
         </p>

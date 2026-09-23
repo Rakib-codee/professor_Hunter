@@ -14,9 +14,9 @@ export default async function SavedPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-semibold tracking-tight">Saved professors</h1>
+      <h1 className="text-[26px] leading-tight font-semibold tracking-tight">Saved professors</h1>
       {professors.length === 0 ? (
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-[15px]">
           Nothing saved yet. Tap the heart on any professor in{' '}
           <Link href="/find" className="text-primary hover:underline">
             Find
@@ -24,9 +24,11 @@ export default async function SavedPage() {
           .
         </p>
       ) : (
-        professors.map((professor) => (
-          <ProfessorCard key={professor.id} professor={professor} saved isSignedIn />
-        ))
+        <div className="ledger border-border border-y">
+          {professors.map((professor) => (
+            <ProfessorCard key={professor.id} professor={professor} saved isSignedIn />
+          ))}
+        </div>
       )}
     </div>
   );

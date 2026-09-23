@@ -59,7 +59,7 @@ export function AcademicForm({ student, flow }: AcademicFormProps) {
         />
       </div>
       <fieldset className="grid grid-cols-3 gap-3">
-        <legend className="mb-1.5 text-sm font-medium">Language scores (optional)</legend>
+        <legend className="mb-1.5 text-[15px] font-medium">Language scores (optional)</legend>
         <FormField
           name="ielts"
           label="IELTS"
@@ -93,7 +93,7 @@ export function AcademicForm({ student, flow }: AcademicFormProps) {
         />
       </fieldset>
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1.5 text-sm font-medium">
+        <legend className="mb-1.5 text-[15px] font-medium">
           Publications or projects (up to {ACHIEVEMENT_MAX_ITEMS})
         </legend>
         {Array.from({ length: ACHIEVEMENT_MAX_ITEMS }, (_, index) => (
@@ -112,9 +112,9 @@ export function AcademicForm({ student, flow }: AcademicFormProps) {
           />
         ))}
         {state.fieldErrors?.achievements ? (
-          <p className="text-destructive text-xs">{state.fieldErrors.achievements}</p>
+          <p className="text-destructive text-[13px]">{state.fieldErrors.achievements}</p>
         ) : (
-          <p className="text-muted-foreground text-xs">
+          <p className="text-muted-foreground text-[13px]">
             One line each. These go into your draft email, so be specific.
           </p>
         )}
