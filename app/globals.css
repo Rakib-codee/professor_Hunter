@@ -63,6 +63,10 @@
 
 /* DESIGN.md §1. Ink #1C2331, Paper #FFFFFF, Ledger #F5F6F8, Rule #D5D9E0, Slate #5A6472, Cobalt #2E4A8B. */
 :root {
+  /* Display faces (DESIGN.md §7) as plain custom properties: a @theme entry shadowed by a custom
+     @utility of the same name emits no variable. next/font sets --font-archivo* on <html>. */
+  --font-display: var(--font-archivo), 'Arial Narrow', Arial, sans-serif;
+  --font-display-wide: var(--font-archivo-expanded), 'Arial Black', Arial, sans-serif;
   --background: #ffffff;
   --foreground: #1c2331;
   --card: #ffffff;
@@ -173,6 +177,56 @@
 
 @utility font-cjk {
   font-family: var(--font-cjk);
+}
+
+/* Display type (DESIGN.md §7). Never below 20px, never in a control, at most two sizes per screen. */
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  /* A Chinese name inside display type: 0.9x, regular, in the system CJK stack. */
+  & :lang(zh-Hans) {
+    font-family: var(--font-cjk);
+    font-weight: 400;
+    font-size: 0.9em;
+  }
+}
+
+@utility display-figure {
+  font-family: var(--font-display-wide);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* Page title: 28/1.1 on phones, 36 on desktop. */
+@utility heading-page {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  @media (min-width: 768px) {
+    font-size: 36px;
+  }
+  & :lang(zh-Hans) {
+    font-family: var(--font-cjk);
+    font-weight: 400;
+    font-size: 0.9em;
+  }
+}
+
+/* Section heading: 20/1.2 on phones, 24 on desktop. */
+@utility heading-section {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  @media (min-width: 768px) {
+    font-size: 24px;
+  }
 }
 
 @utility tnum {

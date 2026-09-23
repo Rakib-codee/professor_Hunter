@@ -13,10 +13,12 @@ export function ProfessorName({
 }) {
   const cn_ = nameCn?.trim();
   return (
-    <span className={cn('inline-flex flex-wrap items-baseline gap-x-2', className)}>
+    <span className={cn('inline-flex flex-wrap items-baseline gap-x-[0.4em]', className)}>
       <span>{nameEn}</span>
       {cn_ ? (
-        <span lang="zh-Hans" className="text-muted-foreground font-normal">
+        // Size and weight come from the parent: body text steps the CJK up (globals :lang rule),
+        // display type steps it down to 0.9em (font-display utility).
+        <span lang="zh-Hans" className="text-muted-foreground">
           {cn_}
         </span>
       ) : null}
