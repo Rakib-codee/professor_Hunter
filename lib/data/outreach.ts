@@ -50,3 +50,42 @@ export async function getOutreach(studentId: string): Promise<OutreachItem[]> {
   );
   return rows.map((row) => ({ ...row, professor: byId.get(row.professor_id) ?? null }));
 }
+
+export interface DueFollowUp {
+  id: string;
+  professor_id: string;
+  professor_name: string | null;
+  follow_up_on: string;
+  sent_on: string;
+}
+
+const DUE_LIMIT = 5;
+
+/** Emails still waiting whose follow-up date has arrived, oldest first. */
+export async function getDueFollowUps(
+  studentId: string,
+  today = new Date().toISOString().slice(0, 10),
+): Promise<DueFollowUp[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('outreach')
+    .select('id, professor_id, follow_up_on, sent_on')
+    .eq('student_id', studentId)
+    .eq('status', 'sent')
+    .lte('follow_up_on', today)
+    .order('follow_up_on', { ascending: true })
+    .limit(DUE_LIMIT);
+  if (error) throw new Error(`getDueFollowUps: ${error.message}`);
+  const rows = (data ?? []).filter(
+    (row): row is typeof row & { follow_up_on: string } => row.follow_up_on !== null,
+  );
+  if (rows.length === 0) return [];
+  const { data: professors } = await supabase
+    .from('professors_public')
+    .select('id, name_en')
+    .in('id', [...new Set(rows.map((r) => r.professor_id))]);
+  const nameById = new Map(
+    (professors ?? []).flatMap((p) => (p.id ? [[p.id, p.name_en] as const] : [])),
+  );
+  return rows.map((row) => ({ ...row, professor_name: nameById.get(row.professor_id) ?? null }));
+}

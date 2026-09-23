@@ -1,4 +1,6 @@
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/public';
 import type { Json, Tables } from '@/lib/supabase/database.types';
 import type { FindParams } from '@/lib/find/params';
 
@@ -63,6 +65,10 @@ export interface SearchResult {
 export const PAGE_SIZE = 20;
 export const OTHER_TAG = '__other__';
 
+/** Cache tag for every public professor read; admin edits and imports revalidate it. */
+export const PROFESSORS_TAG = 'professors';
+const PUBLIC_CACHE_SECONDS = 300;
+
 function fail(context: string, error: { message: string }): never {
   throw new Error(`${context}: ${error.message}`);
 }
@@ -98,8 +104,18 @@ function toListItem(row: Record<string, Json | undefined>): ProfessorListItem | 
   };
 }
 
+const majorCountsCached = unstable_cache(
+  async (): Promise<Record<string, MajorCount>> => fetchMajorCounts(),
+  ['major-counts'],
+  { tags: [PROFESSORS_TAG], revalidate: PUBLIC_CACHE_SECONDS },
+);
+
 export async function getMajorCounts(): Promise<Record<string, MajorCount>> {
-  const supabase = await createClient();
+  return majorCountsCached();
+}
+
+async function fetchMajorCounts(): Promise<Record<string, MajorCount>> {
+  const supabase = createPublicClient();
   const { data, error } = await supabase.rpc('major_counts', undefined, { get: true });
   if (error) fail('major_counts', error);
   return Object.fromEntries(
@@ -116,8 +132,18 @@ export async function getMajorCounts(): Promise<Record<string, MajorCount>> {
   );
 }
 
+const facetsCached = unstable_cache(
+  async (field: string): Promise<Facets> => fetchFacets(field),
+  ['professor-facets'],
+  { tags: [PROFESSORS_TAG], revalidate: PUBLIC_CACHE_SECONDS },
+);
+
 export async function getFacets(field: string): Promise<Facets> {
-  const supabase = await createClient();
+  return facetsCached(field);
+}
+
+async function fetchFacets(field: string): Promise<Facets> {
+  const supabase = createPublicClient();
   const { data, error } = await supabase.rpc('professor_facets', { p_field: field }, { get: true });
   if (error) fail('professor_facets', error);
   const rec = asRecord(data);
@@ -158,8 +184,18 @@ export async function getFacets(field: string): Promise<Facets> {
   };
 }
 
+const searchCached = unstable_cache(
+  async (field: string, params: FindParams): Promise<SearchResult> => fetchSearch(field, params),
+  ['professor-search'],
+  { tags: [PROFESSORS_TAG], revalidate: PUBLIC_CACHE_SECONDS },
+);
+
 export async function searchProfessors(field: string, params: FindParams): Promise<SearchResult> {
-  const supabase = await createClient();
+  return searchCached(field, params);
+}
+
+async function fetchSearch(field: string, params: FindParams): Promise<SearchResult> {
+  const supabase = createPublicClient();
   const { data, error } = await supabase.rpc(
     'search_professors',
     {
@@ -186,8 +222,18 @@ export async function searchProfessors(field: string, params: FindParams): Promi
   };
 }
 
+const professorCached = unstable_cache(
+  async (id: string): Promise<ProfessorListItem | null> => fetchProfessor(id),
+  ['professor'],
+  { tags: [PROFESSORS_TAG], revalidate: PUBLIC_CACHE_SECONDS },
+);
+
 export async function getProfessor(id: string): Promise<ProfessorListItem | null> {
-  const supabase = await createClient();
+  return professorCached(id);
+}
+
+async function fetchProfessor(id: string): Promise<ProfessorListItem | null> {
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from('professors_public')
     .select('*')

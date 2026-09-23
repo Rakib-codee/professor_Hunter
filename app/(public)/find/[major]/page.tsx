@@ -11,9 +11,36 @@ import { getFacets, getSavedIds, searchProfessors } from '@/lib/data/professors'
 import { getCurrentUserId } from '@/lib/data/students';
 import { parseFindParams } from '@/lib/find/params';
 
-export async function generateMetadata({ params }: PageProps<'/find/[major]'>): Promise<Metadata> {
-  const field = fieldFromSlug((await params).major);
-  return { title: field ? `${field} professors` : 'Find professors' };
+export async function generateMetadata({
+  params,
+  searchParams,
+}: PageProps<'/find/[major]'>): Promise<Metadata> {
+  const { major } = await params;
+  const field = fieldFromSlug(major);
+  if (!field) return { title: 'Find professors' };
+  const [facets, find] = await Promise.all([
+    getFacets(field).catch(() => null),
+    searchParams.then(parseFindParams),
+  ]);
+  const isFiltered =
+    find.tags.length > 0 ||
+    find.uni ||
+    find.province ||
+    find.accepts.length > 0 ||
+    find.uniEmail ||
+    find.q ||
+    find.page > 1;
+  const description = facets
+    ? `${facets.total} ${field} professors at ${facets.universities.length} Chinese universities: research areas, verification dates and whether they accept international students. Free for CSC applicants.`
+    : `${field} professors at Chinese universities for CSC applicants.`;
+  return {
+    title: `${field} professors in China`,
+    description,
+    alternates: { canonical: `/find/${major}` },
+    // Filtered and paginated views are not indexed; the canonical list is.
+    robots: isFiltered ? { index: false, follow: true } : { index: true, follow: true },
+    openGraph: { title: `${field} professors in China · Professor Hunter`, description },
+  };
 }
 
 export default async function FindMajorPage({ params, searchParams }: PageProps<'/find/[major]'>) {

@@ -52,3 +52,6 @@ next-env.d.ts
 
 # local outputs (model comparison, import summaries)
 /out/
+
+# compare-drafts output
+out/

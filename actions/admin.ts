@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { readFileSync } from 'node:fs';
 import { professorEditSchema } from '@/lib/admin/professor-schema';
@@ -9,6 +9,7 @@ import { echoValues, fieldErrorsFrom, type FormState } from '@/lib/forms';
 import { parseCsv } from '@/lib/import/csv';
 import { importRows, type ImportSummary } from '@/lib/import/import';
 import { createSupabaseImportDb } from '@/lib/import/supabase-db';
+import { PROFESSORS_TAG } from '@/lib/data/professors';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
@@ -60,6 +61,7 @@ export async function setProfessorStatus(
     console.error(`[admin.setProfessorStatus] code=${error.code}`);
     return { ok: false, error: GENERIC };
   }
+  revalidateTag(PROFESSORS_TAG, 'max');
   revalidatePath('/admin/reports');
   revalidatePath(`/professor/${parsed.data.professorId}`);
   return { ok: true };
@@ -111,6 +113,7 @@ export async function importCsv(
       createSupabaseImportDb(createAdminClient()),
       loadAllowedTags(),
     );
+    revalidateTag(PROFESSORS_TAG, 'max');
     revalidatePath('/find');
     return { ok: true, summary, attempt };
   } catch (error) {
@@ -168,6 +171,7 @@ export async function updateProfessor(
         : GENERIC;
     return { ok: false, error: message, values, attempt };
   }
+  revalidateTag(PROFESSORS_TAG, 'max');
   revalidatePath(`/professor/${professorId}`);
   revalidatePath(`/admin/professors/${professorId}`);
   revalidatePath('/find');
