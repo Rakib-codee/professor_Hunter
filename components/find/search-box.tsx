@@ -7,9 +7,9 @@ import type { FindParams } from '@/lib/find/params';
 export function SearchBox({ basePath, params }: { basePath: string; params: FindParams }) {
   return (
     <form action={basePath} method="get" role="search" className="flex gap-2">
-      {params.tags.length > 0 ? (
-        <input type="hidden" name="tags" value={params.tags.join(',')} />
-      ) : null}
+      {params.tags.map((tag) => (
+        <input key={tag} type="hidden" name="tags" value={tag} />
+      ))}
       {params.uni ? <input type="hidden" name="uni" value={params.uni} /> : null}
       {params.province ? <input type="hidden" name="province" value={params.province} /> : null}
       {params.accepts.length > 0 ? (

@@ -23,9 +23,9 @@ export function FilterForm({ basePath, params, facets }: FilterFormProps) {
 
   return (
     <form action={basePath} method="get" className="flex flex-col gap-4">
-      {params.tags.length > 0 ? (
-        <input type="hidden" name="tags" value={params.tags.join(',')} />
-      ) : null}
+      {params.tags.map((tag) => (
+        <input key={tag} type="hidden" name="tags" value={tag} />
+      ))}
       {params.q ? <input type="hidden" name="q" value={params.q} /> : null}
 
       <div className="flex flex-col gap-1.5">

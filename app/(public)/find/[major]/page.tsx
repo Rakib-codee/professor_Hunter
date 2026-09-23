@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { ActiveFilters } from '@/components/find/active-filters';
 import { FilterForm } from '@/components/find/filter-form';
 import { FilterSheet } from '@/components/find/filter-sheet';
 import { Pagination } from '@/components/find/pagination';
@@ -82,6 +83,7 @@ export default async function FindMajorPage({ params, searchParams }: PageProps<
           <FilterSheet activeCount={activeFilters}>{filters}</FilterSheet>
         </div>
       </div>
+      <ActiveFilters basePath={basePath} params={find} facets={facets} />
       <div className="grid gap-8 md:grid-cols-[240px_1fr]">
         <aside className="bg-muted hidden self-start rounded-sm p-4 md:block">{filters}</aside>
         <section className="flex flex-col gap-3" aria-label="Results">

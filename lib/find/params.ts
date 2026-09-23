@@ -33,14 +33,25 @@ function first(value: string | string[] | undefined): string {
   return (Array.isArray(value) ? value[0] : value) ?? '';
 }
 
-/** Comma lists may also arrive as repeated keys (`accepts=a&accepts=b` from checkbox groups). */
-function list(value: string | string[] | undefined): string[] {
-  const raw = Array.isArray(value) ? value.join(',') : (value ?? '');
-  return raw
-    .split(',')
+function clean(items: string[]): string[] {
+  return items
     .map((item) => item.trim())
     .filter((item) => item.length > 0 && item.length <= TEXT_MAX)
     .slice(0, LIST_MAX);
+}
+
+/** Comma lists that may also arrive as repeated keys (`accepts=a&accepts=b` from a checkbox group). */
+function commaList(value: string | string[] | undefined): string[] {
+  const raw = Array.isArray(value) ? value.join(',') : (value ?? '');
+  return clean(raw.split(','));
+}
+
+/**
+ * Repeated keys only (`tags=A&tags=B`), one whole value per key. Tag names such as
+ * "Cloud, Edge & Distributed Computing" contain commas, so they are never split.
+ */
+function keyList(value: string | string[] | undefined): string[] {
+  return clean(Array.isArray(value) ? value : value ? [value] : []);
 }
 
 export function parseFindParams(raw: RawSearchParams): FindParams {
@@ -48,10 +59,10 @@ export function parseFindParams(raw: RawSearchParams): FindParams {
   const province = first(raw.province).trim().slice(0, TEXT_MAX);
   const page = Number.parseInt(first(raw.page), 10);
   return {
-    tags: list(raw.tags),
+    tags: keyList(raw.tags),
     uni: UUID.test(uni) ? uni : null,
     province: province || null,
-    accepts: list(raw.accepts).filter((value) => ACCEPTS_VALUES.has(value)),
+    accepts: commaList(raw.accepts).filter((value) => ACCEPTS_VALUES.has(value)),
     uniEmail: first(raw.uniEmail) === '1',
     q: first(raw.q).trim().slice(0, QUERY_MAX),
     page: Number.isInteger(page) && page > 0 ? page : 1,
@@ -81,7 +92,7 @@ export function findHref(
   };
 
   const search = new URLSearchParams();
-  if (next.tags.length > 0) search.set('tags', next.tags.join(','));
+  for (const tag of next.tags) search.append('tags', tag);
   if (next.uni) search.set('uni', next.uni);
   if (next.province) search.set('province', next.province);
   if (next.accepts.length > 0) search.set('accepts', next.accepts.join(','));

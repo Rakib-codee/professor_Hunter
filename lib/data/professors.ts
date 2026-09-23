@@ -194,6 +194,14 @@ export async function searchProfessors(field: string, params: FindParams): Promi
   return searchCached(field, params);
 }
 
+// supabase-js sends GET rpc arrays as an unquoted `{a,b}` literal, so an element containing a
+// comma (or quote/brace) is split by PostgREST. Such calls go through POST instead.
+const ARRAY_LITERAL_UNSAFE = /[,"{}\\]/;
+
+export function canUseGetRpc(lists: readonly (readonly string[] | undefined)[]): boolean {
+  return lists.every((list) => !list || list.every((item) => !ARRAY_LITERAL_UNSAFE.test(item)));
+}
+
 async function fetchSearch(field: string, params: FindParams): Promise<SearchResult> {
   const supabase = createPublicClient();
   const { data, error } = await supabase.rpc(
@@ -209,7 +217,7 @@ async function fetchSearch(field: string, params: FindParams): Promise<SearchRes
       p_page: params.page,
       p_page_size: PAGE_SIZE,
     },
-    { get: true },
+    { get: canUseGetRpc([params.tags, params.accepts]) },
   );
   if (error) fail('search_professors', error);
   const rows = data ?? [];
