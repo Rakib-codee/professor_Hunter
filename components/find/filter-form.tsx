@@ -77,6 +77,9 @@ export function FilterForm({ basePath, params, facets }: FilterFormProps) {
         <input type="checkbox" name="uniEmail" value="1" defaultChecked={params.uniEmail} />
         University email only
       </label>
+      <p className="text-muted-foreground -mt-2 text-xs">
+        Tip: university addresses bounce less and get more replies than personal ones.
+      </p>
 
       <div className="flex gap-2">
         <Button type="submit" size="sm">

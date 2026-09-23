@@ -40,6 +40,12 @@ export function ReportCard({ report }: { report: ReportItem }) {
         <p className="text-sm">
           <Link href={`/professor/${report.professor.id}`} className="hover:underline">
             {report.professor.name_en}
+          </Link>{' '}
+          <Link
+            href={`/admin/professors/${report.professor.id}`}
+            className="text-primary text-xs hover:underline"
+          >
+            edit
           </Link>
           {report.professor.university_name ? ` · ${report.professor.university_name}` : ''}
           {' · '}

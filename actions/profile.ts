@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import type { z } from 'zod';
 import { getCurrentUserId } from '@/lib/data/students';
 import { echoValues, fieldErrorsFrom, type FormState } from '@/lib/forms';
+import { CV_BUCKET, cvPathFor, validateCvFile } from '@/lib/profile/cv';
 import { academicStepSchema, basicStepSchema, researchStepSchema } from '@/lib/profile/schemas';
 import { createClient } from '@/lib/supabase/server';
 import type { TablesUpdate } from '@/lib/supabase/database.types';
@@ -116,4 +117,49 @@ export async function skipOnboardingStep(step: OnboardingStep): Promise<void> {
     redirect('/dashboard');
   }
   redirect(stepPath(3));
+}
+
+// ---------- CV (week 5) ----------
+
+export async function uploadCv(prev: FormState, formData: FormData): Promise<FormState> {
+  const attempt = prev.attempt + 1;
+  const userId = await getCurrentUserId();
+  if (!userId) redirect('/login');
+  const file = formData.get('cv');
+  if (!(file instanceof File)) return { ok: false, error: 'Choose a PDF file.', attempt };
+  const check = validateCvFile(file);
+  if (!check.ok) return { ok: false, error: check.error, attempt };
+
+  const supabase = await createClient();
+  const path = cvPathFor(userId);
+  const { error: uploadError } = await supabase.storage
+    .from(CV_BUCKET)
+    .upload(path, file, { upsert: true, contentType: 'application/pdf' });
+  if (uploadError) {
+    console.error(`[profile.uploadCv] ${uploadError.message}`);
+    return { ok: false, error: 'Upload failed. Please try again.', attempt };
+  }
+  const error = await saveStudent({ cv_path: path });
+  if (error) return { ok: false, error, attempt };
+  revalidatePath('/profile');
+  return { ok: true, message: 'CV uploaded.', attempt };
+}
+
+export async function removeCv(): Promise<void> {
+  const userId = await getCurrentUserId();
+  if (!userId) redirect('/login');
+  const supabase = await createClient();
+  const { error } = await supabase.storage.from(CV_BUCKET).remove([cvPathFor(userId)]);
+  if (error) console.error(`[profile.removeCv] ${error.message}`);
+  await saveStudent({ cv_path: null });
+  revalidatePath('/profile');
+}
+
+/** Short-lived download link for the student's own CV; null when none. */
+export async function getCvSignedUrl(): Promise<string | null> {
+  const userId = await getCurrentUserId();
+  if (!userId) return null;
+  const supabase = await createClient();
+  const { data } = await supabase.storage.from(CV_BUCKET).createSignedUrl(cvPathFor(userId), 60);
+  return data?.signedUrl ?? null;
 }

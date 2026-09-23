@@ -19,6 +19,12 @@ export default async function AdminLayout({ children }: LayoutProps<'/admin'>) {
           <Link href="/admin/reports" className="hover:underline">
             Reports
           </Link>
+          <Link href="/admin/professors" className="hover:underline">
+            Professors
+          </Link>
+          <Link href="/admin/import" className="hover:underline">
+            Import
+          </Link>
           <Link href="/dashboard" className="text-muted-foreground hover:underline">
             Back to app
           </Link>

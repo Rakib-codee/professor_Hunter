@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { getCvSignedUrl } from '@/actions/profile';
 import { AcademicForm } from '@/components/profile/academic-form';
+import { CvSection } from '@/components/profile/cv-section';
 import { BasicForm } from '@/components/profile/basic-form';
 import { CompletenessBar } from '@/components/profile/completeness-bar';
 import { ResearchForm } from '@/components/profile/research-form';
@@ -15,6 +17,7 @@ export default async function ProfilePage() {
   const student = await getCurrentStudent();
   if (!student) redirect('/login');
   const completeness = computeCompleteness(student);
+  const cvUrl = student.cv_path ? await getCvSignedUrl() : null;
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
@@ -43,6 +46,15 @@ export default async function ProfilePage() {
         </CardHeader>
         <CardContent>
           <ResearchForm student={student} flow="profile" />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>CV</CardTitle>
+          <CardDescription>Private. Only you can download it.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CvSection downloadUrl={cvUrl} />
         </CardContent>
       </Card>
     </div>

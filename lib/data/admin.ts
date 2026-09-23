@@ -76,3 +76,52 @@ export async function getOpenReports(): Promise<ReportItem[]> {
     reporter_name: row.student_id ? (nameById.get(row.student_id) ?? null) : null,
   }));
 }
+
+export type ProfessorAdminRow = Tables<'professors'> & { university_name: string | null };
+
+/** Full professor row (including email and notes) for the admin edit form. */
+export async function getProfessorForAdmin(id: string): Promise<ProfessorAdminRow | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('professors').select('*').eq('id', id).maybeSingle();
+  if (error) throw new Error(`getProfessorForAdmin: ${error.message}`);
+  if (!data) return null;
+  const { data: university } = await supabase
+    .from('universities')
+    .select('name_en')
+    .eq('id', data.university_id)
+    .maybeSingle();
+  return { ...data, university_name: university?.name_en ?? null };
+}
+
+export interface ProfessorSearchHit {
+  id: string;
+  name_en: string;
+  name_cn: string | null;
+  field: string;
+  status: string;
+  has_email: boolean;
+}
+
+const SEARCH_LIMIT = 50;
+
+/** Simple admin lookup by English or Chinese name. */
+export async function searchProfessorsForAdmin(query: string): Promise<ProfessorSearchHit[]> {
+  const q = query.trim().replace(/[%_]/g, '');
+  if (!q) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('professors')
+    .select('id, name_en, name_cn, field, status, email')
+    .or(`name_en.ilike.%${q}%,name_cn.ilike.%${q}%`)
+    .order('name_en')
+    .limit(SEARCH_LIMIT);
+  if (error) throw new Error(`searchProfessorsForAdmin: ${error.message}`);
+  return (data ?? []).map((p) => ({
+    id: p.id,
+    name_en: p.name_en,
+    name_cn: p.name_cn,
+    field: p.field,
+    status: p.status,
+    has_email: p.email !== null,
+  }));
+}
