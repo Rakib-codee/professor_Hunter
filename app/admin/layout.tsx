@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: LayoutProps<'/admin'>) {
 
   return (
     <>
-      <SiteHeader homeHref="/admin" brand="Admin" links={links}>
+      <SiteHeader homeHref="/admin" section="Admin" links={links}>
         <SignOutButton />
       </SiteHeader>
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-6 text-[15px]">
