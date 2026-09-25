@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import { Building2Icon, CalendarDaysIcon, CheckIcon, MailIcon, SendIcon } from 'lucide-react';
 import Link from 'next/link';
-import { TagFilter } from '@/components/find/tag-filter';
+import { DraftDemo } from '@/components/landing/draft-demo';
 import { SiteHeader } from '@/components/layout/site-header';
-import { ProfessorCard } from '@/components/professor/professor-card';
 import { RecordStrip } from '@/components/professor/record-strip';
 import { buttonVariants } from '@/components/ui/button';
 import { FIELDS } from '@/lib/constants';
@@ -17,8 +16,9 @@ export const metadata: Metadata = {
     'Browse verified professors at Chinese universities, draft a personalised acceptance-letter request, and track replies. Free, built by students.',
 };
 
-const FRAME_FIELD = 'Civil Engineering';
-const FRAME_PARAMS: FindParams = { ...FIND_DEFAULTS, tags: ['Geotechnical Engineering'] };
+// One live record feeds the evidence-strip feature card below.
+const SAMPLE_FIELD = 'Civil Engineering';
+const SAMPLE_PARAMS: FindParams = { ...FIND_DEFAULTS, tags: ['Geotechnical Engineering'] };
 
 const STEPS = [
   {
@@ -34,25 +34,6 @@ const STEPS = [
     body: 'Mark it sent, get a follow-up date, record the answer. You always know where each application stands.',
   },
 ];
-
-// Browser-style frame around live product UI (reference: product screenshot under the hero).
-function BrowserFrame({ url, children }: { url: string; children: React.ReactNode }) {
-  return (
-    <div className="card-soft overflow-hidden">
-      <div className="bg-muted border-border flex items-center gap-3 border-b px-4 py-2.5">
-        <span className="flex gap-1.5" aria-hidden="true">
-          <span className="bg-border size-2.5 rounded-full" />
-          <span className="bg-border size-2.5 rounded-full" />
-          <span className="bg-border size-2.5 rounded-full" />
-        </span>
-        <span className="bg-background text-muted-foreground mx-auto w-full max-w-xs truncate rounded-sm px-3 py-1 text-center text-[12px]">
-          {url}
-        </span>
-      </div>
-      <div className="px-4 py-4 md:px-6">{children}</div>
-    </div>
-  );
-}
 
 function FeatureCard({
   tint,
@@ -79,18 +60,17 @@ function FeatureCard({
 }
 
 export default async function Home() {
-  const [counts, userId, facets, frame] = await Promise.all([
+  const [counts, userId, facets, sampleResult] = await Promise.all([
     getMajorCounts().catch(() => ({})),
     getCurrentUserId(),
     Promise.all(FIELDS.map((field) => getFacets(field).catch(() => null))),
-    searchProfessors(FRAME_FIELD, FRAME_PARAMS).catch(() => ({ total: 0, items: [] })),
+    searchProfessors(SAMPLE_FIELD, SAMPLE_PARAMS).catch(() => ({ total: 0, items: [] })),
   ]);
   const professors = Object.values(counts).reduce((sum, c) => sum + c.professors, 0);
   const universities = new Set(
     facets.flatMap((facet) => facet?.universities.map((u) => u.id) ?? []),
   ).size;
-  const civilFacets = facets[FIELDS.indexOf(FRAME_FIELD)];
-  const sample = frame.items[0] ?? null;
+  const sample = sampleResult.items[0] ?? null;
 
   return (
     <>
@@ -100,24 +80,21 @@ export default async function Home() {
         </Link>
       </SiteHeader>
       <main className="flex flex-1 flex-col">
-        {/* Hero: centred, eyebrow, two-line headline, subhead with the counts, two CTAs, on a
-            faint grid that fades out. The product frame overlaps the grid's tail. */}
-        <section className="relative">
-          <div className="grid-ground absolute inset-0 -z-10" aria-hidden="true" />
-          <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-5 px-4 pt-12 pb-8 text-center md:pt-20 md:pb-10">
-            <span className="enter bg-primary/10 text-primary rounded-full px-3 py-1 text-[12px] font-semibold tracking-[0.08em] uppercase">
-              Free for CSC applicants
-            </span>
-            <h1 className="enter enter-1 font-display max-w-3xl text-[36px] leading-[1.08] tracking-[-0.02em] text-balance md:text-[52px]">
-              Find the professor who will say yes to your CSC application
+        {/* Hero: centred two-line headline, subhead with the counts, two CTAs, then the one
+            animation that explains the product (a record and the draft written from it). */}
+        <section className="mx-auto flex w-full max-w-5xl flex-col px-4 md:px-6">
+          <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-5 pt-12 pb-10 text-center md:pt-20 md:pb-12">
+            <h1 className="enter font-display max-w-3xl text-[36px] leading-[1.08] tracking-[-0.02em] text-balance md:text-[52px]">
+              Find a supervisor in China for your CSC application
             </h1>
-            <p className="enter enter-2 text-muted-foreground tnum max-w-2xl text-[17px] md:text-lg">
+            <p className="enter enter-1 text-muted-foreground tnum max-w-2xl text-[17px] md:text-lg">
+              Free for CSC applicants.{' '}
               {professors > 0
                 ? `${professors} verified professors at ${universities} Chinese universities in Computer Science, Software Engineering and Civil Engineering.`
                 : 'Verified professors at Chinese universities in Computer Science, Software Engineering and Civil Engineering.'}{' '}
               Pick one, draft a personalised email, track the reply.
             </p>
-            <div className="enter enter-3 flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <div className="enter enter-2 flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               <Link
                 href={userId ? '/find' : '/signup'}
                 className={buttonVariants({ size: 'lg', className: 'sm:min-w-52' })}
@@ -136,45 +113,8 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-          <div className="enter enter-4 mx-auto w-full max-w-5xl px-4 pb-14 md:px-6">
-            <BrowserFrame url="professorhunter.app/find/civil-engineering">
-              <div className="flex flex-col gap-3">
-                <div>
-                  <h2 className="heading-page">{FRAME_FIELD}</h2>
-                  {civilFacets ? (
-                    <p className="text-muted-foreground tnum mt-1 text-[15px]">
-                      {civilFacets.total} professors across {civilFacets.universities.length}{' '}
-                      universities
-                    </p>
-                  ) : null}
-                </div>
-                {civilFacets ? (
-                  <TagFilter
-                    basePath="/find/civil-engineering"
-                    params={FRAME_PARAMS}
-                    tags={civilFacets.tags.slice(0, 6)}
-                    untagged={0}
-                  />
-                ) : null}
-                <p className="tnum text-base font-semibold">{frame.total} results</p>
-                <div className="ledger border-border border-t">
-                  {frame.items.slice(0, 3).map((professor) => (
-                    <ProfessorCard
-                      key={professor.id}
-                      professor={professor}
-                      saved={false}
-                      isSignedIn={Boolean(userId)}
-                    />
-                  ))}
-                </div>
-                <Link
-                  href="/find/civil-engineering?tags=Geotechnical+Engineering"
-                  className="text-primary self-start text-[15px] font-semibold underline-offset-4 hover:underline"
-                >
-                  See all {frame.total} in Geotechnical Engineering
-                </Link>
-              </div>
-            </BrowserFrame>
+          <div className="pb-14">
+            <DraftDemo />
           </div>
         </section>
 
