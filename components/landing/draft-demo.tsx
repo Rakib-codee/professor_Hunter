@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, type CSSProperties } from 'react';
 import { ProfessorName } from '@/components/professor/professor-name';
 import { RecordStrip } from '@/components/professor/record-strip';
 import { DEMO, DEMO_LINK_MS, DEMO_START_MS, DEMO_STEP_MS, DEMO_TEXT } from './draft-demo-data';
@@ -9,6 +9,10 @@ import { DEMO, DEMO_LINK_MS, DEMO_START_MS, DEMO_STEP_MS, DEMO_TEXT } from './dr
 // on the right. Every character is in the DOM from the first paint (opacity 0), so the block
 // reserves its final size; CSS delays reveal them in order. The only JS measures the two
 // highlighted phrases and draws the connector between them (globals.css "Landing draft demo").
+// Playback starts once, when the block is at least 40% in view: on phones it sits below the
+// hero, and an animation that ran on load would be over before anyone scrolled to it.
+
+const VISIBLE_FRACTION = 0.4;
 
 const CORNER_RADIUS = 6;
 const ANCHOR_INSET = 3;
@@ -60,6 +64,24 @@ export function DraftDemo() {
   const recordMarkRef = useRef<HTMLElement>(null);
   const emailMarkRef = useRef<HTMLElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const figureRef = useRef<HTMLElement>(null);
+
+  // Start playback once the block is in view. The class is added straight to the element so
+  // the 450 character spans are not re-rendered for a one-off state change.
+  useEffect(() => {
+    const figure = figureRef.current;
+    if (!figure) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        figure.classList.add('is-playing');
+        observer.disconnect();
+      },
+      { threshold: VISIBLE_FRACTION },
+    );
+    observer.observe(figure);
+    return () => observer.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -105,6 +127,7 @@ export function DraftDemo() {
 
   return (
     <figure
+      ref={figureRef}
       className="draft-demo mx-auto w-full max-w-5xl"
       style={
         {
@@ -118,7 +141,8 @@ export function DraftDemo() {
         ref={rootRef}
         className="relative grid gap-5 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-6"
       >
-        {/* The record, in the draft page's summary order: name, title, university, strip, area. */}
+        {/* The record, in the draft page's summary order: name, title, university, strip, area.
+            Phones keep only name, strip and research area so more of the email is on screen. */}
         <div
           ref={recordRef}
           className="bg-muted flex flex-col gap-2 rounded-lg p-4 md:self-start md:p-5"
@@ -130,10 +154,10 @@ export function DraftDemo() {
             <ProfessorName nameEn={DEMO.name_en} nameCn={DEMO.name_cn} />
           </h3>
           <p className="text-muted-foreground -mt-1 hidden text-[15px] md:block">{DEMO.title}</p>
-          <p className="text-[15px] leading-snug">
+          <p className="hidden text-[15px] leading-snug md:block">
             {DEMO.university_name}
             <br />
-            <span className="text-muted-foreground hidden md:inline">{DEMO.school}</span>
+            <span className="text-muted-foreground">{DEMO.school}</span>
           </p>
           <RecordStrip professor={DEMO} />
           <p className="text-muted-foreground mt-1 text-[13px]">Research area</p>

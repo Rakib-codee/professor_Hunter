@@ -261,7 +261,13 @@
 /* Landing draft demo (components/landing/draft-demo.tsx). Every character is present from the
    first paint at opacity 0 and is revealed by a 1 ms opacity keyframe whose delay comes from its
    index, so the block never reflows. The phrase highlight and the connector fade in together at
-   --demo-link. Reduced motion zeroes every delay and the finished draft shows at once. */
+   --demo-link. Nothing runs until the component adds .is-playing (block 40% in view, once).
+   Reduced motion zeroes every delay, ignores the gate, and shows the finished draft at once. */
+.draft-demo:not(.is-playing) .typed,
+.draft-demo:not(.is-playing) .demo-mark::before,
+.draft-demo:not(.is-playing) .demo-line {
+  animation-play-state: paused;
+}
 .draft-demo .typed {
   animation: fade 1ms linear both;
   animation-delay: calc(var(--demo-start) + var(--i) * var(--demo-step));
@@ -290,6 +296,7 @@
   .draft-demo *,
   .draft-demo *::before {
     animation-delay: 0s !important;
+    animation-play-state: running !important;
   }
 }
 
