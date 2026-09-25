@@ -42,7 +42,7 @@ export function CvSection({ downloadUrl }: CvSectionProps) {
       <form
         key={`${state.attempt}-${downloadUrl ? 'has-cv' : 'no-cv'}`}
         action={action}
-        className="flex flex-col gap-2"
+        className="@container flex flex-col gap-2"
         encType="multipart/form-data"
       >
         <Label htmlFor="cv-file">
@@ -58,7 +58,9 @@ export function CvSection({ downloadUrl }: CvSectionProps) {
         />
         <FormMessage error={state.error} message={state.message} />
         <div>
-          <SubmitButton pendingText="Uploading…">Upload</SubmitButton>
+          <SubmitButton pendingText="Uploading…" className="@md:w-auto @md:min-w-40">
+            Upload
+          </SubmitButton>
         </div>
       </form>
     </div>

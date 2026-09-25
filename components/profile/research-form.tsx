@@ -3,6 +3,7 @@
 import { useActionState, useState } from 'react';
 import { saveResearchStep, type ProfileFlow } from '@/actions/profile';
 import { FormMessage } from '@/components/form/form-message';
+import { SectionHeader } from '@/components/profile/section-header';
 import { NativeSelect } from '@/components/form/native-select';
 import { SubmitButton } from '@/components/form/submit-button';
 import { TextareaField } from '@/components/form/textarea-field';
@@ -15,6 +16,10 @@ import { inferFieldFromMajor, tagsForField } from '@/lib/profile/tags';
 interface ResearchFormProps {
   student: Student;
   flow: ProfileFlow;
+  /** When set, the form renders its own heading with the save confirmation beside it. */
+  title?: string;
+  description?: string;
+  headingId?: string;
 }
 
 const FIELD_OPTIONS = FIELDS.map((field) => ({ value: field, label: field }));
@@ -23,7 +28,7 @@ function asField(value: string | null | undefined): Field | null {
   return (FIELDS as readonly string[]).includes(value ?? '') ? (value as Field) : null;
 }
 
-export function ResearchForm({ student, flow }: ResearchFormProps) {
+export function ResearchForm({ student, flow, title, description, headingId }: ResearchFormProps) {
   const [state, action] = useActionState(saveResearchStep, INITIAL_FORM_STATE);
   // Preselect from the saved target field, else guess from the major typed in step 1.
   const [field, setField] = useState<Field | null>(
@@ -34,9 +39,17 @@ export function ResearchForm({ student, flow }: ResearchFormProps) {
   const tags = field ? tagsForField(field) : [];
 
   return (
-    <form key={state.attempt} action={action} className="flex flex-col gap-4" noValidate>
+    <form key={state.attempt} action={action} className="@container flex flex-col gap-4" noValidate>
       <input type="hidden" name="flow" value={flow} />
-      <FormMessage error={state.error} message={state.message} />
+      {title ? (
+        <SectionHeader
+          title={title}
+          description={description}
+          status={state.ok ? state.message : undefined}
+          headingId={headingId}
+        />
+      ) : null}
+      <FormMessage error={state.error} message={title ? undefined : state.message} />
       <NativeSelect
         name="target_field"
         label="Target field"
@@ -54,7 +67,7 @@ export function ResearchForm({ student, flow }: ResearchFormProps) {
         defaultValue={state.values?.research_interests ?? student.research_interests ?? ''}
         error={state.fieldErrors?.research_interests}
       />
-      <fieldset className="flex flex-col gap-2">
+      <fieldset id="research_tags" className="flex flex-col gap-2">
         <legend className="mb-1.5 text-[15px] font-medium">
           Research tags (pick 1–{TAGS_MAX})
         </legend>
@@ -83,7 +96,9 @@ export function ResearchForm({ student, flow }: ResearchFormProps) {
           <p className="text-destructive text-[13px]">{state.fieldErrors.research_tags}</p>
         ) : null}
       </fieldset>
-      <SubmitButton pendingText="Saving…">{flow === 'onboarding' ? 'Finish' : 'Save'}</SubmitButton>
+      <SubmitButton pendingText="Saving…" className="@md:w-auto @md:min-w-40 @md:self-start">
+        {flow === 'onboarding' ? 'Finish' : 'Save'}
+      </SubmitButton>
     </form>
   );
 }

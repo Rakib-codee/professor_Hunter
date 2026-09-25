@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { saveAcademicStep, type ProfileFlow } from '@/actions/profile';
 import { FormField } from '@/components/form/form-field';
 import { FormMessage } from '@/components/form/form-message';
+import { SectionHeader } from '@/components/profile/section-header';
 import { NativeSelect } from '@/components/form/native-select';
 import { SubmitButton } from '@/components/form/submit-button';
 import { INTAKE_YEAR_MAX, INTAKE_YEAR_MIN } from '@/lib/constants';
@@ -18,6 +19,10 @@ import {
 interface AcademicFormProps {
   student: Student;
   flow: ProfileFlow;
+  /** When set, the form renders its own heading with the save confirmation beside it. */
+  title?: string;
+  description?: string;
+  headingId?: string;
 }
 
 const DEGREE_OPTIONS = [
@@ -28,17 +33,25 @@ const DEGREE_OPTIONS = [
 const text = (value: string | number | null | undefined): string =>
   value === null || value === undefined ? '' : String(value);
 
-export function AcademicForm({ student, flow }: AcademicFormProps) {
+export function AcademicForm({ student, flow, title, description, headingId }: AcademicFormProps) {
   const [state, action] = useActionState(saveAcademicStep, INITIAL_FORM_STATE);
   const value = (name: keyof Student) =>
     state.values?.[name] ?? text(student[name] as string | number | null);
   const achievements = splitAchievements(student.achievements);
 
   return (
-    <form key={state.attempt} action={action} className="flex flex-col gap-4" noValidate>
+    <form key={state.attempt} action={action} className="@container flex flex-col gap-4" noValidate>
       <input type="hidden" name="flow" value={flow} />
-      <FormMessage error={state.error} message={state.message} />
-      <div className="grid grid-cols-2 gap-3">
+      {title ? (
+        <SectionHeader
+          title={title}
+          description={description}
+          status={state.ok ? state.message : undefined}
+          headingId={headingId}
+        />
+      ) : null}
+      <FormMessage error={state.error} message={title ? undefined : state.message} />
+      <div className="grid gap-4 @md:grid-cols-2">
         <NativeSelect
           name="degree_applying"
           label="Applying for"
@@ -119,7 +132,7 @@ export function AcademicForm({ student, flow }: AcademicFormProps) {
           </p>
         )}
       </fieldset>
-      <SubmitButton pendingText="Saving…">
+      <SubmitButton pendingText="Saving…" className="@md:w-auto @md:min-w-40 @md:self-start">
         {flow === 'onboarding' ? 'Continue' : 'Save'}
       </SubmitButton>
     </form>

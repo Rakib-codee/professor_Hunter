@@ -47,6 +47,8 @@ describe('computeCompleteness', () => {
     expect(result.score).toBe(5);
     expect(result.isReady).toBe(false);
     expect(result.missing).toHaveLength(11);
+    expect(result.missingItems[0]).toEqual({ label: 'Full name', field: 'full_name' });
+    expect(result.missingItems.map((item) => item.label)).toEqual(result.missing);
   });
 
   test('cgpa needs both value and scale, blank strings count as missing', () => {
